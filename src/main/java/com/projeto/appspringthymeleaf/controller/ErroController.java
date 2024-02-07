@@ -1,6 +1,10 @@
 package com.projeto.appspringthymeleaf.controller;
 
+import java.util.Collection;
+import java.util.Set;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,60 +15,65 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.projeto.appspringthymeleaf.record.AlertRecord;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class ErroController {
 
+	private static final String DEFAULT_ERROR_MESSAGE = "Erro inesperado.";
+	private static final String ARGUMENT_ERROR_MESSAGE = "Erro de argumento inválido.";
+	private static final String VALIDATION_ERROR_MESSAGE = "Erro de validação.";
+	private static final String NOT_FOUND_ERROR_MESSAGE = "Erro de página não encontrada.";
+
+	private AlertRecord createAlertRecord(String type, String title, String message) {
+		return new AlertRecord(type, title, message);
+	}
+
+	private String buildErrorMessage(Collection<? extends ObjectError> errors) {
+		StringBuilder sbMessages = new StringBuilder("<ul>");
+		errors.forEach(error -> sbMessages.append("<li>").append(error.getDefaultMessage()).append("</li>"));
+		sbMessages.append("</ul>");
+		return sbMessages.toString();
+	}
+
+	private String buildErrorMessageForConstraintViolations(Set<ConstraintViolation<?>> violations) {
+		StringBuilder sbMessages = new StringBuilder("<ul>");
+		violations.forEach(violation -> sbMessages.append("<li>").append(violation.getMessage()).append("</li>"));
+		sbMessages.append("</ul>");
+		return sbMessages.toString();
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ModelAndView handleException(Exception ex) {
-		AlertRecord alertRecord = new AlertRecord("danger", "Erro inesperado.", ex.getMessage());
-
-		ModelAndView modelAndView = new ModelAndView("erro");
-		modelAndView.addObject("alertRecord", alertRecord);
-		return modelAndView;
+		AlertRecord alertRecord = createAlertRecord("danger", DEFAULT_ERROR_MESSAGE, ex.getMessage());
+		return getModelAndView(alertRecord);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ModelAndView handleValidationException(MethodArgumentNotValidException ex) {
-
-		StringBuilder sbMessages = new StringBuilder();
-		sbMessages.append("<ul>");
-		ex.getBindingResult().getFieldErrors().stream().forEach(error -> sbMessages.append("<li>").append("Arqumento '")
-				.append(error.getField()).append("' inválido").append("</li>"));
-		sbMessages.append("</ul>");
-
-		AlertRecord alertRecord = new AlertRecord("danger", "Erro de arqumento inválido.", sbMessages.toString());
-
-		ModelAndView modelAndView = new ModelAndView("erro");
-		modelAndView.addObject("alertRecord", alertRecord);
-		return modelAndView;
+		String errorMessage = buildErrorMessage(ex.getBindingResult().getAllErrors());
+		AlertRecord alertRecord = createAlertRecord("danger", ARGUMENT_ERROR_MESSAGE, errorMessage);
+		return getModelAndView(alertRecord);
 	}
 
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ModelAndView handleConstraintViolationException(ConstraintViolationException ex) {
-
-		StringBuilder sbMessages = new StringBuilder();
-		sbMessages.append("<ul>");
-		ex.getConstraintViolations().stream()
-				.forEach(violation -> sbMessages.append("<li>").append(violation.getMessage()).append("</li>"));
-		sbMessages.append("</ul>");
-
-		AlertRecord alertRecord = new AlertRecord("danger", "Erro de validação.", sbMessages.toString());
-
-		ModelAndView modelAndView = new ModelAndView("erro");
-		modelAndView.addObject("alertRecord", alertRecord);
-		return modelAndView;
+		String errorMessage = buildErrorMessageForConstraintViolations(ex.getConstraintViolations());
+		AlertRecord alertRecord = createAlertRecord("danger", VALIDATION_ERROR_MESSAGE, errorMessage);
+		return getModelAndView(alertRecord);
 	}
 
 	@ExceptionHandler({ NoResourceFoundException.class, NoHandlerFoundException.class })
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public ModelAndView handleNoResourceFoundException(NoResourceFoundException ex) {
-		StringBuilder sbMessages = new StringBuilder();
-		sbMessages.append("<ul>").append("<li>").append(ex.getResourcePath()).append("</li>").append("</ul>");
+	public ModelAndView handleNoResourceFoundException(NoResourceFoundException ex, HttpServletRequest request) {
+		String errorMessage = "<ul><li>" + request.getRequestURL().toString() + "</li></ul>";
+		AlertRecord alertRecord = createAlertRecord("danger", NOT_FOUND_ERROR_MESSAGE, errorMessage);
+		return getModelAndView(alertRecord);
+	}
 
-		AlertRecord alertRecord = new AlertRecord("danger", "Erro de página não encontrada.", sbMessages.toString());
-
+	private ModelAndView getModelAndView(AlertRecord alertRecord) {
 		ModelAndView modelAndView = new ModelAndView("erro");
 		modelAndView.addObject("alertRecord", alertRecord);
 		return modelAndView;
