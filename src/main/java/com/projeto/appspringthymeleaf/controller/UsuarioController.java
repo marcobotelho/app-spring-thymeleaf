@@ -2,14 +2,20 @@ package com.projeto.appspringthymeleaf.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.projeto.appspringthymeleaf.model.UsuarioModel;
+import com.projeto.appspringthymeleaf.record.AlertRecord;
 import com.projeto.appspringthymeleaf.service.UsuarioService;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/usuario")
@@ -19,45 +25,80 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 
 	@GetMapping("")
-	public ModelAndView getAll() {
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("usuario");
-		modelAndView.addObject("usuario", new UsuarioModel());
-		modelAndView.addObject("usuarios", usuarioService.getAll());
-		return modelAndView;
+	public String ini(@ModelAttribute("usuario") UsuarioModel usuario,
+			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model) {
+		model.addAttribute("usuario", usuario);
+		model.addAttribute("usuarios", usuarioService.getAll());
+		return "usuario";
 	}
 
 	@GetMapping("/novo")
-	public ModelAndView novo() {
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("redirect:/usuario");
-		return modelAndView;
+	public String novo(RedirectAttributes redirectAttributes) {
+		return "redirect:/usuario";
 	}
 
 	@GetMapping("/editar/{id}")
-	public ModelAndView getById(@PathVariable("id") Long id) {
-		ModelAndView modelAndView = new ModelAndView("usuario");
-		modelAndView.addObject("usuario", usuarioService.getById(id));
-		modelAndView.addObject("usuarios", usuarioService.getAll());
-		return modelAndView;
+	public String editar(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+		redirectAttributes.addFlashAttribute("usuario", usuarioService.getById(id));
+		return "redirect:/usuario";
 	}
 
 	@PostMapping("")
-	public ModelAndView save(UsuarioModel usuario) {
-		if (usuario.getId() == null) {
-			usuarioService.save(usuario);
+	public String salvar(@Valid UsuarioModel usuario, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingResult.hasErrors()) {
+			redirectAttributes.addFlashAttribute("alertRecord", criarAlertaErroValidacao(bindingResult));
 		} else {
-			usuarioService.update(usuario.getId(), usuario);
+			try {
+				if (usuario.getId() == null) {
+					usuarioService.save(usuario);
+				} else {
+					usuarioService.update(usuario.getId(), usuario);
+				}
+				redirectAttributes.addFlashAttribute("alertRecord", criarAlertaSucesso("Usuário salvo com sucesso!"));
+				redirectAttributes.addFlashAttribute("usuario", new UsuarioModel());
+			} catch (Exception e) {
+				redirectAttributes.addFlashAttribute("alertRecord",
+						criarAlertaErro("Erro ao salvar usuário: " + e.getMessage()));
+				redirectAttributes.addFlashAttribute("usuario", usuario);
+			}
 		}
-		ModelAndView modelAndView = new ModelAndView("redirect:/usuario");
-		return modelAndView;
+		return "redirect:/usuario";
 	}
 
 	@GetMapping("/excluir/{id}")
-	public ModelAndView delete(@PathVariable String id) {
-		usuarioService.deleteById(Long.valueOf(id));
-		ModelAndView modelAndView = new ModelAndView("redirect:/usuario");
-		return modelAndView;
+	public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+		try {
+			usuarioService.deleteById(id);
+			redirectAttributes.addFlashAttribute("alertRecord", criarAlertaSucesso("Usuário excluído com sucesso!"));
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("alertRecord",
+					criarAlertaErro("Erro ao excluir usuário: " + e.getMessage()));
+		}
+		return "redirect:/usuario";
 	}
 
+	private AlertRecord criarAlertaSucesso(String mensagem) {
+		return new AlertRecord("success", "Sucesso!", mensagem);
+	}
+
+	private AlertRecord criarAlertaErro(String mensagem) {
+		return new AlertRecord("danger", "Erro!", mensagem);
+	}
+
+	private AlertRecord criarAlertaErroValidacao(BindingResult bindingResult) {
+		return new AlertRecord("warning", "Atenção!", montarMsgErroValidacao(bindingResult));
+	}
+
+	private String montarMsgErroValidacao(BindingResult bindingResult) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<ul>");
+		bindingResult.getAllErrors().forEach(error -> {
+			sb.append("<li>");
+			sb.append(error.getDefaultMessage());
+			sb.append("</li>");
+		});
+		sb.append("</ul>");
+		return sb.toString();
+	}
 }
