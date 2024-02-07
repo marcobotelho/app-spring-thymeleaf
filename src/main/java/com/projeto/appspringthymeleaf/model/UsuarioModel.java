@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Entity;
@@ -11,6 +13,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "usuario")
@@ -21,10 +26,20 @@ public class UsuarioModel implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@NotBlank(message = "Nome obrigatório")
+	@Length(min = 3, max = 100, message = "Nome inválido")
 	private String nome;
+
+	@NotBlank(message = "Email obrigatório")
+	@Email(message = "Email inválido")
 	private String email;
+
+	@NotNull(message = "Idade obrigatória")
+	@Range(min = 1, max = 150, message = "Idade inválida")
 	private Integer idade;
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataNascimento;
 
 	public UsuarioModel() {
