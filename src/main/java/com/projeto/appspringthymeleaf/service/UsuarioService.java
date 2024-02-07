@@ -1,5 +1,7 @@
 package com.projeto.appspringthymeleaf.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,14 +35,16 @@ public class UsuarioService {
 	}
 
 	public void deleteById(Long id) {
+		getById(id);
 		usuarioRepository.deleteById(id);
 	}
 
 	public UsuarioModel getById(Long id) {
+		usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 		return usuarioRepository.findById(id).get();
 	}
 
-	public Iterable<UsuarioModel> getAll() {
+	public List<UsuarioModel> getAll() {
 		return usuarioRepository.findAll();
 	}
 }
