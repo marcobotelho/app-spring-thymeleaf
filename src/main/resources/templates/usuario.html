@@ -3,7 +3,7 @@
 		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
 		data-bs-theme="dark">
 <head>
-    <title>Cadastro/Atualização de Usuário</title>
+    <title>Usuário</title>
     
 	<th:block th:replace="~{fragmentos/fragments.html :: headerfiles}"> </th:block>
 </head>
@@ -16,11 +16,8 @@
 	  </div>
 	  <div class="card-body">
         <form id="formCadastro" th:action="@{/usuario}" th:object="${usuario}" method="post" >
-			<div th:if="${alertRecord != null && alertRecord.type != null}" th:class="'alert alert-' + ${alertRecord.type} + ' alert-dismissible fade show'" role="alert">
-				<strong th:if="${alertRecord.title != null}"  th:utext="${alertRecord.title}"></strong>
-			    <span th:if="${alertRecord.message != null}" th:utext="${alertRecord.message}"></span>
-			    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
-			</div>
+			
+			<th:block th:replace="~{fragmentos/fragments.html :: fragAlert}" th:with="alertRecord=${alertRecord}"></th:block>
 			
             <input type="hidden" th:field="*{id}">
             <div class="row"> 
@@ -86,6 +83,7 @@
                     <td>
                         <a th:href="@{/usuario/editar/{id}(id=${usuario.id})}" class="btn btn-primary btn-sm">Editar</a>
                         <a th:href="@{/usuario/excluir/{id}(id=${usuario.id})}" class="btn btn-danger btn-sm">Excluir</a>
+                        <a th:href="@{/telefone/usuarioId={id}(id=${usuario.id})}" class="btn btn-warning btn-sm">Telefones</a>
                     </td>
                 </tr>
             </tbody>
