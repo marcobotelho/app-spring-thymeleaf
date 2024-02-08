@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html 	xmlns:th="http://www.thymeleaf.org" 
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+		data-bs-theme="dark">
+<head>
+    <title>Telefone</title>
+    
+	<th:block th:replace="~{fragmentos/fragments.html :: headerfiles}"> </th:block>
+</head>
+<body>
+    <th:block th:replace="~{fragmentos/fragments.html :: fragNavbar}"> </th:block>
+
+	<div class="card" style="margin:1em">
+	  <div class="card-header text-bg-primary">
+	    <b>Cadastro/Atualização de Telefone</b>
+	  </div>
+	  <div class="card-body">
+        <form id="formCadastro" th:action="@{/telefone}" th:object="${telefone}" method="post" >
+			
+			<th:block th:replace="~{fragmentos/fragments.html :: fragAlert}" th:with="alertRecord=${alertRecord}"></th:block>
+			<input type="hidden" th:field="*{usuario.id}">
+            <input type="hidden" th:field="*{id}">
+            <div class="row"> 
+            	<div class="form-group col-md-6">
+		            <div class="form-floating mb-3">
+		                <input type="text" class="form-control" id="usuario" th:field="*{usuario.nome}" placeholder="Usuário" readonly>
+		                <label for="usuario">Usuário</label>
+		            </div>            	
+				</div>
+			</div>
+			<div class="row"> 
+            	<div class="form-group col-md-3">
+		            <div class="form-floating mb-3">
+		                <input type="text" class="form-control maskTelefone" id="numero" th:field="*{numero}" placeholder="Nome" >
+		                <label for="numero">Número</label>
+		            </div>            	
+				</div>
+	            <div class="form-group col-md-3">
+	            	<div class="form-floating mb-3">
+					  <select class="form-select" th:field="*{tipo}">
+					    <option th:each="tipo : ${tipos}"
+					            th:value="${tipo}" th:text="${tipo.displayName}">
+					    </option>
+					  </select>
+					  <label for="floatingSelect">Tipo</label>
+					</div>
+	            </div>	            
+            </div>            
+            <div class="row"> 
+            	<div class="form-group col-md-6">
+		            <button type="submit" class="btn btn-primary">Salvar</button>
+		            <a th:href="@{/telefone/usuarioId={id}(id=${telefone.usuario.id})}" class="btn btn-success">Novo</a>
+	            </div>
+			</div>
+        </form>
+	  </div>
+	</div>
+	<div class="card" style="margin:1em">
+	  <div class="card-header text-bg-primary">
+	    <b>Lista de Telefone</b>
+	  </div>
+	  <div class="card-body table-responsive">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Número</th>
+                    <th>Tipo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="telefone : ${telefones}">
+                    <td th:text="${telefone.id}"></td>
+                    <td th:text="${telefone.numero}"></td>
+                    <td th:text="${telefone.tipo}"></td>
+                    <td>
+                        <a th:href="@{/telefone/editar/{id}(id=${telefone.id})}" class="btn btn-primary btn-sm">Editar</a>
+                        <a th:href="@{/telefone/excluir/{id}(id=${telefone.id})}" class="btn btn-danger btn-sm">Excluir</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>        
+   	  </div>
+	</div>
+	
+    <th:block th:replace="~{fragmentos/fragments.html :: fragFooter}"> </th:block>
+	
+	<script>
+	    $(document).ready(function(){
+	        $('.maskTelefone').mask('(00) 00000-0000');
+	    });
+	</script>
+</body>
+</html>
