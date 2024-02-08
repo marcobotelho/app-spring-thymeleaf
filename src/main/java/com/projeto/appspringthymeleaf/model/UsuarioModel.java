@@ -2,16 +2,20 @@ package com.projeto.appspringthymeleaf.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -41,6 +45,9 @@ public class UsuarioModel implements Serializable {
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dataNascimento;
+
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private List<TelefoneModel> telefones;
 
 	public UsuarioModel() {
 	}
@@ -91,6 +98,14 @@ public class UsuarioModel implements Serializable {
 
 	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
+	}
+
+	public List<TelefoneModel> getTelefones() {
+		return telefones;
+	}
+
+	public void setTelefones(List<TelefoneModel> telefones) {
+		this.telefones = telefones;
 	}
 
 	@Override
