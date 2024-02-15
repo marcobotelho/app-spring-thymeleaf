@@ -42,14 +42,15 @@ public class TelefoneController {
 
 	@GetMapping("/editar/{id}")
 	public String editar(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+		TelefoneModel telefone = new TelefoneModel();
 		try {
-			TelefoneModel telefone = telefoneService.getById(id);
+			telefone = telefoneService.getById(id);
 			redirectAttributes.addFlashAttribute("telefone", telefone);
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("alertRecord",
 					criarAlertaErro("Erro ao editar telefone: " + e.getMessage()));
 		}
-		return "redirect:/telefone/usuarioId=" + id;
+		return "redirect:/telefone/usuarioId=" + telefone.getUsuario().getId();
 	}
 
 	@PostMapping("")
