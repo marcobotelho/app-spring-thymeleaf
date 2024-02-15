@@ -29,8 +29,8 @@ public class TelefoneController {
 	@Autowired
 	private UsuarioService usuarioService;
 
-	@GetMapping("/usuarioId={usuarioId}")
-	public String ini(@PathVariable("usuarioId") Long usuarioId, @ModelAttribute("telefone") TelefoneModel telefone,
+	@GetMapping("")
+	public String ini(@ModelAttribute("usuarioId") Long usuarioId, @ModelAttribute("telefone") TelefoneModel telefone,
 			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model) {
 		telefone.setUsuario(usuarioService.getById(usuarioId));
 		model.addAttribute("telefone", telefone);
@@ -40,21 +40,15 @@ public class TelefoneController {
 		return "telefone";
 	}
 
-	@GetMapping("/editar/{id}")
-	public String editar(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-		try {
-			TelefoneModel telefone = telefoneService.getById(id);
-			redirectAttributes.addFlashAttribute("telefone", telefone);
-		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("alertRecord",
-					criarAlertaErro("Erro ao editar telefone: " + e.getMessage()));
-		}
-		return "redirect:/telefone/usuarioId=" + id;
+	@GetMapping("/novo/{usuarioId}")
+	public String novo(@PathVariable("usuarioId") Long usuarioId, RedirectAttributes redirectAttributes) {
+		redirectAttributes.addFlashAttribute("usuarioId", usuarioId);
+		return "redirect:/telefone";
 	}
 
 	@PostMapping("")
 	public String salvar(@Valid TelefoneModel telefone, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes, Model model) {
 		if (bindingResult.hasErrors()) {
 			redirectAttributes.addFlashAttribute("telefone", telefone);
 			redirectAttributes.addFlashAttribute("alertRecord", criarAlertaErroValidacao(bindingResult));
@@ -62,27 +56,41 @@ public class TelefoneController {
 			try {
 				telefoneService.save(telefone);
 				redirectAttributes.addFlashAttribute("alertRecord", criarAlertaSucesso("Telefone salvo com sucesso!"));
-				redirectAttributes.addFlashAttribute("telefone", new TelefoneModel());
 			} catch (Exception e) {
+				redirectAttributes.addFlashAttribute("telefone", telefone);
 				redirectAttributes.addFlashAttribute("alertRecord",
 						criarAlertaErro("Erro ao salvar telefone: " + e.getMessage()));
-				redirectAttributes.addFlashAttribute("telefone", telefone);
 			}
 		}
-		return "redirect:/telefone/usuarioId=" + telefone.getUsuario().getId();
+		redirectAttributes.addFlashAttribute("usuarioId", telefone.getUsuario().getId());
+		return "redirect:/telefone";
 	}
 
-	@GetMapping("/excluir/{id}")
-	public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-		TelefoneModel telefone = telefoneService.getById(id);
+	@GetMapping("/editar/{usuarioId}&{id}")
+	public String editar(@PathVariable("usuarioId") Long usuarioId, @PathVariable("id") Long id,
+			RedirectAttributes redirectAttributes) {
 		try {
-			telefoneService.deleteById(telefone.getId());
+			redirectAttributes.addFlashAttribute("telefone", telefoneService.getById(id));
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("alertRecord",
+					criarAlertaErro("Erro ao editar telefone: " + e.getMessage()));
+		}
+		redirectAttributes.addFlashAttribute("usuarioId", usuarioId);
+		return "redirect:/telefone";
+	}
+
+	@GetMapping("/excluir/{usuarioId}&{id}")
+	public String delete(@PathVariable("usuarioId") Long usuarioId, @PathVariable Long id,
+			RedirectAttributes redirectAttributes) {
+		try {
+			telefoneService.deleteById(id);
 			redirectAttributes.addFlashAttribute("alertRecord", criarAlertaSucesso("Telefone excluído com sucesso!"));
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("alertRecord",
 					criarAlertaErro("Erro ao excluir telefone: " + e.getMessage()));
 		}
-		return "redirect:/telefone/usuarioId=" + telefone.getUsuario().getId();
+		redirectAttributes.addFlashAttribute("usuarioId", usuarioId);
+		return "redirect:/telefone";
 	}
 
 	private AlertRecord criarAlertaSucesso(String mensagem) {
