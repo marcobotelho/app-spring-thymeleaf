@@ -46,6 +46,12 @@ public class TelefoneModel implements Serializable {
 
 	}
 
+	public TelefoneModel(String numero, TipoTelefoneEnum tipo, UsuarioModel usuario) {
+		this.numero = numero;
+		this.tipo = tipo;
+		this.usuario = usuario;
+	}
+
 	public TelefoneModel(Long id, String numero, TipoTelefoneEnum tipo, UsuarioModel usuario) {
 		this.id = id;
 		this.numero = numero;
