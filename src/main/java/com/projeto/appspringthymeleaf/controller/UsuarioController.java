@@ -78,6 +78,12 @@ public class UsuarioController {
 		return "redirect:/usuario";
 	}
 
+	@GetMapping("/viewTelefone/{id}")
+	public String viewTelefone(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
+		redirectAttributes.addFlashAttribute("usuarioId", id);
+		return "redirect:/telefone";
+	}
+
 	private AlertRecord criarAlertaSucesso(String mensagem) {
 		return new AlertRecord("success", "Sucesso!", mensagem);
 	}
