@@ -15,9 +15,9 @@
 	    <b>Cadastro/Atualização de Telefone</b>
 	  </div>
 	  <div class="card-body">
+		<th:block th:replace="~{fragmentos/fragments.html :: fragAlert}" th:with="alertRecord=${alertRecord}"></th:block>
+		
         <form id="formCadastro" th:action="@{/telefone}" th:object="${telefone}" method="post" >
-			
-			<th:block th:replace="~{fragmentos/fragments.html :: fragAlert}" th:with="alertRecord=${alertRecord}"></th:block>
 			<input type="hidden" th:field="*{usuario.id}">
             <input type="hidden" th:field="*{id}">
             <div class="row"> 
@@ -38,6 +38,7 @@
 	            <div class="form-group col-md-3">
 	            	<div class="form-floating mb-3">
 					  <select class="form-select" th:field="*{tipo}">
+					  	<option value="" class="d-none">Selecione tipo telefone</option>
 					    <option th:each="tipo : ${tipos}"
 					            th:value="${tipo}" th:text="${tipo.displayName}">
 					    </option>
@@ -49,7 +50,7 @@
             <div class="row"> 
             	<div class="form-group col-md-6">
 		            <button type="submit" class="btn btn-primary">Salvar</button>
-		            <a th:href="@{/telefone/usuarioId={id}(id=${telefone.usuario.id})}" class="btn btn-success">Novo</a>
+		            <a th:href="@{/telefone/novo/{usuarioId}(usuarioId=*{usuario.id})}" class="btn btn-success">Novo</a>
 	            </div>
 			</div>
         </form>
@@ -75,8 +76,8 @@
                     <td th:text="${telefone.numero}"></td>
                     <td th:text="${telefone.tipo}"></td>
                     <td>
-                        <a th:href="@{/telefone/editar/{id}(id=${telefone.id})}" class="btn btn-primary btn-sm">Editar</a>
-                        <a th:href="@{/telefone/excluir/{id}(id=${telefone.id})}" class="btn btn-danger btn-sm">Excluir</a>
+                        <a th:href="@{/telefone/editar/{usuarioId}&{id}(usuarioId=${telefone.usuario.id}, id=${telefone.id})}" class="btn btn-primary btn-sm">Editar</a>
+                        <a th:href="@{/telefone/excluir/{usuarioId}&{id}(usuarioId=${telefone.usuario.id}, id=${telefone.id})}" class="btn btn-danger btn-sm">Excluir</a>
                     </td>
                 </tr>
             </tbody>
