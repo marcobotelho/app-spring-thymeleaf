@@ -35,9 +35,7 @@ public class TelefoneService {
 	}
 
 	public TelefoneModel getById(Long id) {
-		telefoneRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Telefone com id " + id + " não encontrado!"));
-		return telefoneRepository.findById(id).get();
+		return telefoneRepository.findById(id).orElseThrow( () -> new RuntimeException("Telefone com id " + id + " não encontrado!"));
 	}
 
 	public List<TelefoneModel> getAll(Long usuarioId) {

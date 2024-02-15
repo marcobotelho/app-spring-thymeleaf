@@ -40,10 +40,24 @@ public class TelefoneController {
 		return "telefone";
 	}
 
+<<<<<<< HEAD
 	@GetMapping("/novo/{usuarioId}")
 	public String novo(@PathVariable("usuarioId") Long usuarioId, RedirectAttributes redirectAttributes) {
 		redirectAttributes.addFlashAttribute("usuarioId", usuarioId);
 		return "redirect:/telefone";
+=======
+	@GetMapping("/editar/{id}")
+	public String editar(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+		TelefoneModel telefone = new TelefoneModel();
+		try {
+			telefone = telefoneService.getById(id);
+			redirectAttributes.addFlashAttribute("telefone", telefone);
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("alertRecord",
+					criarAlertaErro("Erro ao editar telefone: " + e.getMessage()));
+		}
+		return "redirect:/telefone/usuarioId=" + telefone.getUsuario().getId();
+>>>>>>> refs/remotes/origin/main
 	}
 
 	@PostMapping("")
