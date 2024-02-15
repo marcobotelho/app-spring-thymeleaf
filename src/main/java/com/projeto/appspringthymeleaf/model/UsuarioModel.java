@@ -39,6 +39,10 @@ public class UsuarioModel implements Serializable {
 	@Email(message = "Email inválido")
 	private String email;
 
+	@NotBlank(message = "Senha obrigatória")
+	@Length(min = 6, max = 100, message = "Senha inválida")
+	private String senha;
+
 	@NotNull(message = "Idade obrigatória")
 	@Range(min = 1, max = 150, message = "Idade inválida")
 	private Integer idade;
@@ -52,10 +56,19 @@ public class UsuarioModel implements Serializable {
 	public UsuarioModel() {
 	}
 
-	public UsuarioModel(Long id, String nome, String email, Integer idade, LocalDate dataNascimento) {
+	public UsuarioModel(String nome, String email, String senha, Integer idade, LocalDate dataNascimento) {
+		this.nome = nome;
+		this.email = email;
+		this.senha = senha;
+		this.idade = idade;
+		this.dataNascimento = dataNascimento;
+	}
+
+	public UsuarioModel(Long id, String nome, String email, String senha, Integer idade, LocalDate dataNascimento) {
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
+		this.senha = senha;
 		this.idade = idade;
 		this.dataNascimento = dataNascimento;
 	}
@@ -82,6 +95,14 @@ public class UsuarioModel implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public Integer getIdade() {
