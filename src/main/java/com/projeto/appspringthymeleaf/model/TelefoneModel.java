@@ -18,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "telefone")
@@ -33,6 +34,7 @@ public class TelefoneModel implements Serializable {
 	@Length(min = 15, max = 15, message = "Número inválido")
 	private String numero;
 
+	@NotNull(message = "Tipo obrigatório")
 	@Enumerated(EnumType.STRING)
 	private TipoTelefoneEnum tipo;
 
