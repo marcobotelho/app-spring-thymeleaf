@@ -83,7 +83,7 @@
                     <td>
                         <a th:href="@{/usuario/editar/{id}(id=${usuario.id})}" class="btn btn-primary btn-sm">Editar</a>
                         <a th:href="@{/usuario/excluir/{id}(id=${usuario.id})}" class="btn btn-danger btn-sm">Excluir</a>
-                        <a th:href="@{/telefone/usuarioId={id}(id=${usuario.id})}" class="btn btn-warning btn-sm">Telefones</a>
+                        <a th:href="@{/usuario/viewTelefone/{usuarioId}(usuarioId=${usuario.id})}" class="btn btn-warning btn-sm">Telefones</a>
                     </td>
                 </tr>
             </tbody>
