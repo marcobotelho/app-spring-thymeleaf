@@ -22,6 +22,7 @@ import jakarta.validation.ConstraintViolationException;
 @ControllerAdvice
 public class GenericErrorController {
 
+	private static final String VIEW_NAME = "erro";
 	private static final String DEFAULT_ERROR_MESSAGE = "Erro inesperado.";
 	private static final String ARGUMENT_ERROR_MESSAGE = "Erro de argumento inválido.";
 	private static final String VALIDATION_ERROR_MESSAGE = "Erro de validação.";
@@ -74,7 +75,7 @@ public class GenericErrorController {
 	}
 
 	private ModelAndView getModelAndView(AlertRecord alertRecord) {
-		ModelAndView modelAndView = new ModelAndView("erro");
+		ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
 		modelAndView.addObject("alertRecord", alertRecord);
 		return modelAndView;
 	}
