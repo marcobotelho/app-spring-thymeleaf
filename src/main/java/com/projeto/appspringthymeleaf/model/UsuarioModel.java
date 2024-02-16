@@ -1,7 +1,7 @@
 package com.projeto.appspringthymeleaf.model;
 
-import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,6 +15,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -23,9 +26,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "usuario")
-public class UsuarioModel implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class UsuarioModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +53,10 @@ public class UsuarioModel implements Serializable {
 
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<TelefoneModel> telefones;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "usuario_role", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private List<RoleModel> roles = new ArrayList<>();
 
 	public UsuarioModel() {
 	}
@@ -127,6 +132,14 @@ public class UsuarioModel implements Serializable {
 
 	public void setTelefones(List<TelefoneModel> telefones) {
 		this.telefones = telefones;
+	}
+
+	public List<RoleModel> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<RoleModel> roles) {
+		this.roles = roles;
 	}
 
 	@Override
