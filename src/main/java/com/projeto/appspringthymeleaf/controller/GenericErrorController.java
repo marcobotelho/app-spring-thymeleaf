@@ -20,7 +20,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
-public class ErroController {
+public class GenericErrorController {
 
 	private static final String DEFAULT_ERROR_MESSAGE = "Erro inesperado.";
 	private static final String ARGUMENT_ERROR_MESSAGE = "Erro de argumento inválido.";
