@@ -4,11 +4,10 @@
 		data-bs-theme="dark">
 <head>
     <title>Login</title>
-    
-    <th:block th:replace="~{fragmentos/fragments.html :: headerfiles}"> </th:block>		
+    <div th:replace="~{fragments/head :: head}"></div>
 </head>
 <body>
-    <th:block th:replace="~{fragmentos/fragments.html :: fragNavbar}"> </th:block>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
     <div class="container">
         <div class="row justify-content-center mt-5">
             <div class="col-md-6">
@@ -40,6 +39,6 @@
         </div>
     </div>
 
-    <th:block th:replace="~{fragmentos/fragments.html :: fragFooter}"> </th:block>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

@@ -1,0 +1,72 @@
+<nav th:fragment="navbar" class="navbar navbar-expand-sm bg-body-tertiary border-bottom border-body" style="margin: 1em">
+    <div class="container-fluid">
+
+        <!-- Logo ou nome da marca -->
+        <a class="navbar-brand" href="#" th:href="@{/home}">
+            <img src="https://getbootstrap.com/docs/5.2/assets/brand/bootstrap-logo.svg" alt="Logo" title="Aplicação Thymeleaf/Bootstrap" width="30" height="24">
+        </a>		  
+        
+        <!-- Botão de colapso para telas menores -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">		    
+            <!-- Seleção de páginas -->
+            <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/home}" href="#">Início</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Páginas
+                </a>
+                <ul class="dropdown-menu">
+                <li><a class="dropdown-item" th:href="@{/usuario}" href="#">Usuário</a></li>
+                </ul>
+            </li>		        
+            </ul>
+            
+            <!-- Seleção sair -->
+            <ul class="navbar-nav ms-auto"> 
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/logout}" href="#">Sair</a>
+            </li>
+            </ul>		      
+            
+            <!-- Seleção de tema -->
+            <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a id="bd-theme" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-circle-half my-1 theme-icon-active"></i>
+                <span id="bd-theme-text">Tema</span>
+                </a>
+                <ul class="dropdown-menu">
+                <li>
+                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+                    <i class="bi bi-sun-fill me-2 theme-icon"></i>
+                    Light
+                    <i class="bi bi-check2 ms-auto d-none"></i>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+                    <i class="bi bi-moon-stars-fill me-2 theme-icon"></i>
+                    Dark
+                    <i class="bi bi-check2 ms-auto d-none"></i>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+                    <i class="bi bi-circle-half me-2 theme-icon"></i>
+                    Auto
+                    <i class="bi bi-check2 ms-auto d-none"></i>
+                    </button>
+                </li>
+                </ul>
+            </li>		        
+            </ul>
+
+        </div>
+    </div>
+</nav>

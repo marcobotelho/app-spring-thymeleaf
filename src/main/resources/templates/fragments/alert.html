@@ -1,0 +1,5 @@
+<div th:fragment="alert(alertRecord)" th:if="${alertRecord != null && alertRecord.type != null}" th:class="'alert alert-' + ${alertRecord.type} + ' alert-dismissible fade show'" role="alert">
+            <strong th:if="${alertRecord.title != null}"  th:utext="${alertRecord.title}"></strong>
+            <span th:if="${alertRecord.message != null}" th:utext="${alertRecord.message}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+</div>

@@ -4,18 +4,17 @@
 		data-bs-theme="dark">
 <head>
     <title>Telefone</title>
-    
-	<th:block th:replace="~{fragmentos/fragments.html :: headerfiles}"> </th:block>
+    <div th:replace="~{fragments/head :: head}"></div>
 </head>
 <body>
-    <th:block th:replace="~{fragmentos/fragments.html :: fragNavbar}"> </th:block>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
 	<div class="card" style="margin:1em">
 	  <div class="card-header text-bg-primary">
 	    <b>Cadastro/Atualização de Telefone</b>
 	  </div>
 	  <div class="card-body">
-		<th:block th:replace="~{fragmentos/fragments.html :: fragAlert}" th:with="alertRecord=${alertRecord}"></th:block>
+		<div th:replace="~{fragments/alert :: alert(alertRecord=${alertRecord})}"></div>
 		
         <form id="formCadastro" th:action="@{/telefone}" th:object="${telefone}" method="post" >
 			<input type="hidden" th:field="*{usuario.id}">
@@ -85,7 +84,7 @@
    	  </div>
 	</div>
 	
-    <th:block th:replace="~{fragmentos/fragments.html :: fragFooter}"> </th:block>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 	
 	<script>
 	    $(document).ready(function(){

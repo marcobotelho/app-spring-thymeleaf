@@ -2,18 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Cadastro/Atualização de Usuário</title>
-    
-	<th:block th:replace="~{fragmentos/fragments.html :: headerfiles}"> </th:block>
+    <div th:replace="~{fragments/head :: head}"></div>
 </head>
 <body>
-    <th:block th:replace="~{fragmentos/fragments.html :: fragNavbar}"> </th:block>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-	<div th:if="${alertRecord}" th:class="'alert alert-' + ${alertRecord.type}" role="alert" style="margin:1em" >
-		<strong th:utext="${alertRecord.title}"></strong>
-	    <span th:utext="${alertRecord.message}"> </span>
-	</div>
+	<div style="margin:1em" th:insert="~{fragments/alert :: alert(alertRecord=${alertRecord})}"></div>
 	
-	<th:block th:replace="~{fragmentos/fragments.html :: fragFooter}"> </th:block>
+	<div th:replace="~{fragments/footer :: footer}"></div>
 	
 </body>
 </html>

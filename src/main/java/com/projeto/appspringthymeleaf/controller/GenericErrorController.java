@@ -75,7 +75,7 @@ public class GenericErrorController {
 	}
 
 	private ModelAndView getModelAndView(AlertRecord alertRecord) {
-		ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
+		ModelAndView modelAndView = new ModelAndView("erro");
 		modelAndView.addObject("alertRecord", alertRecord);
 		return modelAndView;
 	}
