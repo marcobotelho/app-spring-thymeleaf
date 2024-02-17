@@ -33,11 +33,13 @@ public class SecurityConfig {
                 http.authorizeHttpRequests(request -> request.requestMatchers(ENDPOINTS_WHITELIST).permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/user/**").hasRole("USER")
-                                .requestMatchers("/usuario").hasAnyRole("ADMIN")
+                                .requestMatchers("/usuario").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/telefone").hasAnyRole("ADMIN")
                                 .anyRequest().authenticated())
                                 .csrf(csrf -> csrf
                                                 .ignoringRequestMatchers(ENDPOINTS_WHITELIST).disable())
                                 .headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))
+                                .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/erro/403"))
                                 .formLogin(form -> form
                                                 .loginPage(LOGIN_URL)
                                                 .loginProcessingUrl(LOGIN_URL)
