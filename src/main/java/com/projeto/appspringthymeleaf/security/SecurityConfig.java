@@ -33,8 +33,9 @@ public class SecurityConfig {
                 http.authorizeHttpRequests(request -> request.requestMatchers(ENDPOINTS_WHITELIST).permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/user/**").hasRole("USER")
-                                .requestMatchers("/usuario").hasAnyRole("ADMIN", "USER")
-                                .requestMatchers("/telefone").hasAnyRole("ADMIN")
+                                .requestMatchers("/usuario").hasAnyRole("ADMIN")
+                                .requestMatchers("/cliente").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers("/telefone").hasAnyRole("ADMIN", "USER")
                                 .anyRequest().authenticated())
                                 .csrf(csrf -> csrf
                                                 .ignoringRequestMatchers(ENDPOINTS_WHITELIST).disable())

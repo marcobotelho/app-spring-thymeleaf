@@ -12,8 +12,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "role")
-public class RoleModel {
+@Table(name = "perfil")
+public class PerfilModel {
 
     @Override
     public String toString() {
@@ -27,14 +27,18 @@ public class RoleModel {
     @NotBlank(message = "Name obrigatório")
     private String nome;
 
-    @ManyToMany(mappedBy = "roles")
+    @NotBlank(message = "Descrição obrigatória")
+    private String descricao;
+
+    @ManyToMany(mappedBy = "perfis")
     private List<UsuarioModel> usuarios = new ArrayList<>();
 
-    public RoleModel() {
+    public PerfilModel() {
     }
 
-    public RoleModel(String nome) {
+    public PerfilModel(String nome, String descricao) {
         this.nome = nome;
+        this.descricao = descricao;
     }
 
     public Long getId() {
@@ -51,6 +55,14 @@ public class RoleModel {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public List<UsuarioModel> getUsuarios() {
@@ -77,7 +89,7 @@ public class RoleModel {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        RoleModel other = (RoleModel) obj;
+        PerfilModel other = (PerfilModel) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

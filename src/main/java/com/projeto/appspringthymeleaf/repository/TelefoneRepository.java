@@ -8,5 +8,5 @@ import com.projeto.appspringthymeleaf.model.TelefoneModel;
 
 public interface TelefoneRepository extends JpaRepository<TelefoneModel, Long> {
 
-	List<TelefoneModel> findByUsuarioId(Long UsuarioId);
+	List<TelefoneModel> findByClienteId(Long clienteId);
 }

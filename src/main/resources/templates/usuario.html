@@ -11,37 +11,29 @@
 
 	<div class="card" style="margin:1em">
 	  <div class="card-header text-bg-primary">
-	    <b>Cadastro/Atualização de Usuário</b>
+	    <b>Cadastro de Usuário</b>
 	  </div>
 	  <div class="card-body">
 		<div th:replace="~{fragments/alert :: alert(alertRecord=${alertRecord})}"></div>
         <form id="formCadastro" th:action="@{/usuario}" th:object="${usuario}" method="post" >
             <input type="hidden" th:field="*{id}">
             <div class="row"> 
-            	<div class="form-group col-md-6">
+            	<div class="form-group col-md-4">
 		            <div class="form-floating mb-3">
 		                <input type="text" class="form-control" id="nome" th:field="*{nome}" placeholder="Nome">
 		                <label for="nome">Nome</label>
 		            </div>            	
 				</div>
-	            <div class="form-group col-md-6">
+	            <div class="form-group col-md-4">
 	            	<div class="form-floating mb-3">
 		                <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="E-mail">
 		                <label for="email">E-mail</label>
 	            	</div>
 	            </div>
-            </div>
-            <div class="row"> 
-	            <div class="form-group col-md-2">
+	            <div class="form-group col-md-4">
 	            	<div class="form-floating mb-3">
-		                <input type="number" class="form-control" id="idade" th:field="*{idade}" placeholder="Idade">
-		                <label for="idade">Idade</label>
-	            	</div>
-	            </div>
-	            <div class="form-group col-md-3">
-	            	<div class="form-floating mb-3">
-		                <input type="date" class="form-control" id="dataNascimento" th:field="*{dataNascimento}" placeholder="Data Nascimento">
-		                <label for="dataNascimento">Data Nascimento</label>
+		                <input type="password" class="form-control" id="senha" th:field="*{senha}" placeholder="Senha">
+		                <label for="senha">Senha</label>
 	            	</div>
 	            </div>
             </div>
@@ -65,8 +57,6 @@
                     <th>ID</th>
                     <th>Nome</th>
                     <th>E-mail</th>
-                    <th>Idade</th>
-                    <th>Nascimento</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -75,12 +65,9 @@
                     <td th:text="${usuario.id}"></td>
                     <td th:text="${usuario.nome}"></td>
                     <td th:text="${usuario.email}"></td>
-                    <td th:text="${usuario.idade}"></td>
-                    <td th:text="${#temporals.format(usuario.dataNascimento, 'dd/MM/yyyy')}"></td>
                     <td>
                         <a th:href="@{/usuario/editar/{id}(id=${usuario.id})}" class="btn btn-primary btn-sm">Editar</a>
                         <a th:href="@{/usuario/excluir/{id}(id=${usuario.id})}" class="btn btn-danger btn-sm">Excluir</a>
-                        <a th:href="@{/usuario/viewTelefone/{usuarioId}(usuarioId=${usuario.id})}" class="btn btn-warning btn-sm">Telefones</a>
                     </td>
                 </tr>
             </tbody>

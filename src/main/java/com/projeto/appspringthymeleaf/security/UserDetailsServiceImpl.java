@@ -23,8 +23,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                         "Usuário não encontrado: " + username));
         UserDetails userDetails = User
                 .withUsername(usuarioModel.getEmail())
-                .password(usuarioModel.getSenha()) // Aqui você obtém a senha do banco de dados
-                .authorities(usuarioModel.getRoles().stream().map(role -> role.getNome()).toArray(String[]::new))
+                .password(usuarioModel.getSenha())
+                .authorities(usuarioModel.getPerfis().stream().map(role -> role.getNome()).toArray(String[]::new))
                 .build();
         return userDetails;
     }

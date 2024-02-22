@@ -29,8 +29,6 @@ public class UsuarioService {
 		UsuarioModel user = usuarioRepository.getReferenceById(id);
 		user.setNome(model.getNome());
 		user.setEmail(model.getEmail());
-		user.setIdade(model.getIdade());
-		user.setDataNascimento(model.getDataNascimento());
 		usuarioRepository.save(user);
 	}
 

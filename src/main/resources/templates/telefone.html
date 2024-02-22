@@ -11,19 +11,19 @@
 
 	<div class="card" style="margin:1em">
 	  <div class="card-header text-bg-primary">
-	    <b>Cadastro/Atualização de Telefone</b>
+	    <b>Cadastro de Telefone</b>
 	  </div>
 	  <div class="card-body">
 		<div th:replace="~{fragments/alert :: alert(alertRecord=${alertRecord})}"></div>
 		
         <form id="formCadastro" th:action="@{/telefone}" th:object="${telefone}" method="post" >
-			<input type="hidden" th:field="*{usuario.id}">
+			<input type="hidden" th:field="*{cliente.id}">
             <input type="hidden" th:field="*{id}">
             <div class="row"> 
             	<div class="form-group col-md-6">
 		            <div class="form-floating mb-3">
-		                <input type="text" class="form-control" id="usuario" th:field="*{usuario.nome}" placeholder="Usuário" readonly>
-		                <label for="usuario">Usuário</label>
+		                <input type="text" class="form-control" id="cliente" th:field="*{cliente.nome}" placeholder="Usuário" readonly>
+		                <label for="cliente">Usuário</label>
 		            </div>            	
 				</div>
 			</div>
@@ -49,7 +49,7 @@
             <div class="row"> 
             	<div class="form-group col-md-6">
 		            <button type="submit" class="btn btn-primary">Salvar</button>
-		            <a th:href="@{/telefone/novo/{usuarioId}(usuarioId=*{usuario.id})}" class="btn btn-success">Novo</a>
+		            <a th:href="@{/telefone/novo/{clienteId}(clienteId=*{cliente.id})}" class="btn btn-success">Novo</a>
 	            </div>
 			</div>
         </form>
@@ -75,8 +75,8 @@
                     <td th:text="${telefone.numero}"></td>
                     <td th:text="${telefone.tipo}"></td>
                     <td>
-                        <a th:href="@{/telefone/editar/{usuarioId}&{id}(usuarioId=${telefone.usuario.id}, id=${telefone.id})}" class="btn btn-primary btn-sm">Editar</a>
-                        <a th:href="@{/telefone/excluir/{usuarioId}&{id}(usuarioId=${telefone.usuario.id}, id=${telefone.id})}" class="btn btn-danger btn-sm">Excluir</a>
+                        <a th:href="@{/telefone/editar/{clienteId}&{id}(clienteId=${telefone.cliente.id}, id=${telefone.id})}" class="btn btn-primary btn-sm">Editar</a>
+                        <a th:href="@{/telefone/excluir/{clienteId}&{id}(clienteId=${telefone.cliente.id}, id=${telefone.id})}" class="btn btn-danger btn-sm">Excluir</a>
                     </td>
                 </tr>
             </tbody>

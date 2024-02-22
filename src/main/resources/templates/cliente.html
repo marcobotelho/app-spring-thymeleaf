@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html 	xmlns:th="http://www.thymeleaf.org" 
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+		data-bs-theme="dark">
+<head>
+    <title>Cliente</title>
+    <div th:replace="~{fragments/head :: head}"></div>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+	<div class="card" style="margin:1em">
+	  <div class="card-header text-bg-primary">
+	    <b>Cadastro de Cliente</b>
+	  </div>
+	  <div class="card-body">
+		<div th:replace="~{fragments/alert :: alert(alertRecord=${alertRecord})}"></div>
+        <form id="formCadastro" th:action="@{/cliente}" th:object="${cliente}" method="post" >
+            <input type="hidden" th:field="*{id}">
+            <div class="row"> 
+            	<div class="form-group col-md-4">
+		            <div class="form-floating mb-3">
+		                <input type="text" class="form-control" id="nome" th:field="*{nome}" placeholder="Nome">
+		                <label for="nome">Nome</label>
+		            </div>            	
+				</div>
+	            <div class="form-group col-md-4">
+	            	<div class="form-floating mb-3">
+		                <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="E-mail">
+		                <label for="email">E-mail</label>
+	            	</div>
+	            </div>
+                <div class="form-group col-md-1">
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="idade" th:field="*{idade}" placeholder="Idade">
+                        <label for="idade">Idade</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-2">
+                    <div class="form-floating mb-3">
+                        <input type="date" class="form-control" id="dataNascimento" th:field="*{dataNascimento}" placeholder="Data Nascimento">
+                        <label for="dataNascimento">Data Nascimento</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row"> 
+	            <div class="form-group col-md-1">
+	            	<div class="form-floating mb-3">
+		                <input type="text" class="form-control" id="cep" th:field="*{cep}" placeholder="Cep">
+		                <label for="cep">Cep</label>
+	            	</div>
+	            </div>
+	            <div class="form-group col-md-4">
+	            	<div class="form-floating mb-3">
+		                <input type="text" class="form-control" id="endereco" th:field="*{endereco}" placeholder="Endereço">
+		                <label for="endereco">Endereço</label>
+	            	</div>
+	            </div>
+	            <div class="form-group col-md-3">
+	            	<div class="form-floating mb-3">
+		                <input type="text" class="form-control" id="bairro" th:field="*{bairro}" placeholder="Bairro">
+		                <label for="bairro">Bairro</label>
+	            	</div>
+	            </div>
+	            <div class="form-group col-md-3">
+	            	<div class="form-floating mb-3">
+		                <input type="text" class="form-control" id="municipio" th:field="*{municipio}" placeholder="Município">
+		                <label for="municipio">Município</label>
+	            	</div>
+	            </div>
+	            <div class="form-group col-md-1">
+	            	<div class="form-floating mb-3">
+		                <input type="text" class="form-control" id="estado" th:field="*{estado}" placeholder="Estado">
+		                <label for="estado">Estado</label>
+	            	</div>
+	            </div>
+            </div>
+            <div class="row"> 
+            	<div class="form-group col-md-6">
+		            <button type="submit" class="btn btn-primary">Salvar</button>
+		            <a th:href="@{/cliente/novo}" class="btn btn-success">Novo</a>
+	            </div>
+			</div>
+        </form>
+	  </div>
+	</div>
+	<div class="card" style="margin:1em">
+	  <div class="card-header text-bg-primary">
+	    <b>Lista de Cliente</b>
+	  </div>
+	  <div class="card-body table-responsive">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Idade</th>
+                    <th>Nascimento</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="cliente : ${clientes}">
+                    <td th:text="${cliente.id}"></td>
+                    <td th:text="${cliente.nome}"></td>
+                    <td th:text="${cliente.email}"></td>
+                    <td th:text="${cliente.idade}"></td>
+                    <td th:text="${#temporals.format(cliente.dataNascimento, 'dd/MM/yyyy')}"></td>
+                    <td>
+                        <a th:href="@{/cliente/editar/{id}(id=${cliente.id})}" class="btn btn-primary btn-sm">Editar</a>
+                        <a th:href="@{/cliente/excluir/{id}(id=${cliente.id})}" class="btn btn-danger btn-sm">Excluir</a>
+                        <a th:href="@{/cliente/viewTelefone/{clienteId}(clienteId=${cliente.id})}" class="btn btn-warning btn-sm">Telefones</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>        
+   	  </div>
+	</div>
+	
+    <div th:replace="~{fragments/footer :: footer}"></div>
+	
+</body>
+</html>

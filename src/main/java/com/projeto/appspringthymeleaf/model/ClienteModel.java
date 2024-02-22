@@ -35,10 +35,6 @@ public class ClienteModel {
 	@Email(message = "Email inválido")
 	private String email;
 
-	@NotBlank(message = "Senha obrigatória")
-	@Length(min = 6, max = 100, message = "Senha inválida")
-	private String senha;
-
 	@NotNull(message = "Idade obrigatória")
 	@Range(min = 1, max = 150, message = "Idade inválida")
 	private Integer idade;
@@ -52,11 +48,148 @@ public class ClienteModel {
 
 	private String bairro;
 
-	private String cidade;
+	private String municipio;
 
-	private String uf;
+	private String estado;
 
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<TelefoneModel> telefones;
+
+	public ClienteModel() {
+
+	}
+
+	public ClienteModel(String nome, String email, Integer idade, LocalDate dataNascimento,
+			String cep, String endereco, String bairro, String municipio, String estado) {
+		this.nome = nome;
+		this.email = email;
+		this.idade = idade;
+		this.dataNascimento = dataNascimento;
+		this.cep = cep;
+		this.endereco = endereco;
+		this.bairro = bairro;
+		this.municipio = municipio;
+		this.estado = estado;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Integer getIdade() {
+		return idade;
+	}
+
+	public void setIdade(Integer idade) {
+		this.idade = idade;
+	}
+
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getMunicipio() {
+		return municipio;
+	}
+
+	public void setMunicipio(String municipio) {
+		this.municipio = municipio;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public List<TelefoneModel> getTelefones() {
+		return telefones;
+	}
+
+	public void setTelefones(List<TelefoneModel> telefones) {
+		this.telefones = telefones;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ClienteModel other = (ClienteModel) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ClienteModel [id=" + id + ", nome=" + nome + ", email=" + email + ", idade=" + idade
+				+ ", dataNascimento=" + dataNascimento + ", cep=" + cep + ", endereco=" + endereco + ", bairro="
+				+ bairro + ", municipio=" + municipio + ", estado=" + estado + "]";
+	}
 
 }

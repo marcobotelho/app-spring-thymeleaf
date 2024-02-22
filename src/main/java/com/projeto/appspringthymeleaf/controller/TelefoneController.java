@@ -14,8 +14,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.projeto.appspringthymeleaf.enums.TipoTelefoneEnum;
 import com.projeto.appspringthymeleaf.model.TelefoneModel;
 import com.projeto.appspringthymeleaf.record.AlertRecord;
+import com.projeto.appspringthymeleaf.service.ClienteService;
 import com.projeto.appspringthymeleaf.service.TelefoneService;
-import com.projeto.appspringthymeleaf.service.UsuarioService;
 
 import jakarta.validation.Valid;
 
@@ -27,22 +27,22 @@ public class TelefoneController {
 	private TelefoneService telefoneService;
 
 	@Autowired
-	private UsuarioService usuarioService;
+	private ClienteService clienteService;
 
 	@GetMapping("")
-	public String ini(@ModelAttribute("usuarioId") Long usuarioId, @ModelAttribute("telefone") TelefoneModel telefone,
+	public String ini(@ModelAttribute("clienteId") Long clienteId, @ModelAttribute("telefone") TelefoneModel telefone,
 			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model) {
-		telefone.setUsuario(usuarioService.getById(usuarioId));
+		telefone.setCliente(clienteService.getById(clienteId));
 		model.addAttribute("telefone", telefone);
-		model.addAttribute("telefones", telefoneService.getAll(usuarioId));
+		model.addAttribute("telefones", telefoneService.getAll(clienteId));
 		model.addAttribute("tipos", TipoTelefoneEnum.values());
 
 		return "telefone";
 	}
 
-	@GetMapping("/novo/{usuarioId}")
-	public String novo(@PathVariable("usuarioId") Long usuarioId, RedirectAttributes redirectAttributes) {
-		redirectAttributes.addFlashAttribute("usuarioId", usuarioId);
+	@GetMapping("/novo/{clienteId}")
+	public String novo(@PathVariable("clienteId") Long clienteId, RedirectAttributes redirectAttributes) {
+		redirectAttributes.addFlashAttribute("clienteId", clienteId);
 		return "redirect:/telefone";
 	}
 
@@ -62,12 +62,12 @@ public class TelefoneController {
 						criarAlertaErro("Erro ao salvar telefone: " + e.getMessage()));
 			}
 		}
-		redirectAttributes.addFlashAttribute("usuarioId", telefone.getUsuario().getId());
+		redirectAttributes.addFlashAttribute("clienteId", telefone.getCliente().getId());
 		return "redirect:/telefone";
 	}
 
-	@GetMapping("/editar/{usuarioId}&{id}")
-	public String editar(@PathVariable("usuarioId") Long usuarioId, @PathVariable("id") Long id,
+	@GetMapping("/editar/{clienteId}&{id}")
+	public String editar(@PathVariable("clienteId") Long clienteId, @PathVariable("id") Long id,
 			RedirectAttributes redirectAttributes) {
 		try {
 			redirectAttributes.addFlashAttribute("telefone", telefoneService.getById(id));
@@ -75,12 +75,12 @@ public class TelefoneController {
 			redirectAttributes.addFlashAttribute("alertRecord",
 					criarAlertaErro("Erro ao editar telefone: " + e.getMessage()));
 		}
-		redirectAttributes.addFlashAttribute("usuarioId", usuarioId);
+		redirectAttributes.addFlashAttribute("clienteId", clienteId);
 		return "redirect:/telefone";
 	}
 
-	@GetMapping("/excluir/{usuarioId}&{id}")
-	public String delete(@PathVariable("usuarioId") Long usuarioId, @PathVariable Long id,
+	@GetMapping("/excluir/{clienteId}&{id}")
+	public String delete(@PathVariable("clienteId") Long clienteId, @PathVariable Long id,
 			RedirectAttributes redirectAttributes) {
 		try {
 			telefoneService.deleteById(id);
@@ -89,7 +89,7 @@ public class TelefoneController {
 			redirectAttributes.addFlashAttribute("alertRecord",
 					criarAlertaErro("Erro ao excluir telefone: " + e.getMessage()));
 		}
-		redirectAttributes.addFlashAttribute("usuarioId", usuarioId);
+		redirectAttributes.addFlashAttribute("clienteId", clienteId);
 		return "redirect:/telefone";
 	}
 

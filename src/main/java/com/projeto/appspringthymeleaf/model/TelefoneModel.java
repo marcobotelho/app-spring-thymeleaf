@@ -39,24 +39,24 @@ public class TelefoneModel implements Serializable {
 	private TipoTelefoneEnum tipo;
 
 	@ManyToOne
-	@JoinColumn(name = "id_usuario", nullable = false, foreignKey = @ForeignKey(name = "fk_telefone_id_usuario"))
-	private UsuarioModel usuario;
+	@JoinColumn(name = "cliente_id", nullable = false, foreignKey = @ForeignKey(name = "fk_telefone_cliente_id"))
+	private ClienteModel cliente;
 
 	public TelefoneModel() {
 
 	}
 
-	public TelefoneModel(String numero, TipoTelefoneEnum tipo, UsuarioModel usuario) {
+	public TelefoneModel(String numero, TipoTelefoneEnum tipo, ClienteModel cliente) {
 		this.numero = numero;
 		this.tipo = tipo;
-		this.usuario = usuario;
+		this.cliente = cliente;
 	}
 
-	public TelefoneModel(Long id, String numero, TipoTelefoneEnum tipo, UsuarioModel usuario) {
+	public TelefoneModel(Long id, String numero, TipoTelefoneEnum tipo, ClienteModel cliente) {
 		this.id = id;
 		this.numero = numero;
 		this.tipo = tipo;
-		this.usuario = usuario;
+		this.cliente = cliente;
 	}
 
 	public Long getId() {
@@ -83,17 +83,17 @@ public class TelefoneModel implements Serializable {
 		this.tipo = tipo;
 	}
 
-	public UsuarioModel getUsuario() {
-		return usuario;
+	public ClienteModel getCliente() {
+		return cliente;
 	}
 
-	public void setUsuario(UsuarioModel usuario) {
-		this.usuario = usuario;
+	public void setCliente(ClienteModel cliente) {
+		this.cliente = cliente;
 	}
 
 	@Override
 	public String toString() {
-		return "TelefoneModel [id=" + id + ", numero=" + numero + ", tipo=" + tipo + ", usuario=" + usuario + "]";
+		return "TelefoneModel [id=" + id + ", numero=" + numero + ", tipo=" + tipo + ", cliente=" + cliente + "]";
 	}
 
 	@Override
