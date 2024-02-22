@@ -1,39 +1,35 @@
 package com.projeto.appspringthymeleaf.model;
 
-import java.util.List;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "estado")
-public class EstadoModel {
+@Table(name = "municipio")
+public class MunicipioModel {
 
 	@Id
 	private Long id;
 
-	@NotBlank(message = "Nome obrigatório")
+	@NotBlank(message = "Nome obrigatório")
 	private String nome;
 
-	@NotBlank(message = "Sigla obrigatória")
-	private String sigla;
+	@ManyToOne
+	@JoinColumn(name = "estado_id", nullable = false, foreignKey = @ForeignKey(name = "fk_cidade_estado_id"))
+	private EstadoModel estado;
 
-	@OneToMany(mappedBy = "estado", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	private List<MunicipioModel> cidades;
-
-	public EstadoModel() {
+	public MunicipioModel() {
 
 	}
 
-	public EstadoModel(Long id, String nome, String sigla) {
+	public MunicipioModel(Long id, String nome, EstadoModel estado) {
 		this.id = id;
 		this.nome = nome;
-		this.sigla = sigla;
+		this.estado = estado;
 	}
 
 	public Long getId() {
@@ -52,20 +48,12 @@ public class EstadoModel {
 		this.nome = nome;
 	}
 
-	public String getSigla() {
-		return sigla;
+	public EstadoModel getEstado() {
+		return estado;
 	}
 
-	public void setSigla(String sigla) {
-		this.sigla = sigla;
-	}
-
-	public List<MunicipioModel> getCidades() {
-		return cidades;
-	}
-
-	public void setCidades(List<MunicipioModel> cidades) {
-		this.cidades = cidades;
+	public void setEstado(EstadoModel estado) {
+		this.estado = estado;
 	}
 
 	@Override
@@ -84,7 +72,7 @@ public class EstadoModel {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EstadoModel other = (EstadoModel) obj;
+		MunicipioModel other = (MunicipioModel) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -95,7 +83,7 @@ public class EstadoModel {
 
 	@Override
 	public String toString() {
-		return "EstadoModel [id=" + id + ", nome=" + nome + ", sigla=" + sigla + "]";
+		return "CidadeModel [id=" + id + ", nome=" + nome + ", estado=" + estado + "]";
 	}
 
 }
