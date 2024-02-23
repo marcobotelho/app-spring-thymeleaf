@@ -53,6 +53,11 @@ public class DataInitializer implements InitializingBean {
                 usuario2.setPerfis(List.of(perfilUser));
                 usuarioRepository.save(usuario2);
 
+                UsuarioModel usuario3 = new UsuarioModel("Marco Botelho", "marcobotelhoabreu@gmail.com",
+                                passwordEncoder.encode("123"));
+                usuario3.setPerfis(List.of(perfilAdmin, perfilUser));
+                usuarioRepository.save(usuario3);
+
                 /* Criando os clientes */
                 ClienteModel cliente1 = new ClienteModel("João", "j@j.com", 25,
                                 LocalDate.now(), "11111-111", "Rua 1 casa 1", "Centro", "São Paulo", "SP");

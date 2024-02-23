@@ -15,6 +15,7 @@ import com.projeto.appspringthymeleaf.model.UsuarioModel;
 import com.projeto.appspringthymeleaf.record.AlertRecord;
 import com.projeto.appspringthymeleaf.service.UsuarioService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Controller
@@ -48,6 +49,7 @@ public class UsuarioController {
 			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			redirectAttributes.addFlashAttribute("alertRecord", criarAlertaErroValidacao(bindingResult));
+			redirectAttributes.addFlashAttribute("usuario", usuario);
 		} else {
 			try {
 				if (usuario.getId() == null) {
@@ -106,5 +108,21 @@ public class UsuarioController {
 		});
 		sb.append("</ul>");
 		return sb.toString();
+	}
+
+	@GetMapping("/resetar-senha/{id}")
+	public String resetarSenha(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
+			HttpServletRequest request) {
+		try {
+			String baseURL = request.getRequestURL().substring(0,
+					request.getRequestURL().indexOf(request.getServletPath()));
+			usuarioService.resetPassword(id, baseURL);
+			redirectAttributes.addFlashAttribute("alertRecord",
+					criarAlertaSucesso("Senha recuperada com sucesso! Acesse e-mail com nova senha."));
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("alertRecord",
+					criarAlertaErro("Erro ao recuperar senha: " + e.getMessage()));
+		}
+		return "redirect:/usuario";
 	}
 }
