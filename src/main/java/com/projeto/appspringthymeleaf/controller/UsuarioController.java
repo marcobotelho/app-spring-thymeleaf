@@ -110,15 +110,15 @@ public class UsuarioController {
 		return sb.toString();
 	}
 
-	@GetMapping("/resetar-senha/{id}")
-	public String resetarSenha(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
+	@GetMapping("/recuperar-senha/{id}")
+	public String recuperarSenha(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
 			HttpServletRequest request) {
 		try {
 			String baseURL = request.getRequestURL().substring(0,
 					request.getRequestURL().indexOf(request.getServletPath()));
 			usuarioService.resetPassword(id, baseURL);
 			redirectAttributes.addFlashAttribute("alertRecord",
-					criarAlertaSucesso("Senha recuperada com sucesso! Acesse e-mail com nova senha."));
+					criarAlertaSucesso("Senha recuperada com sucesso! E-mail enviado com nova senha."));
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("alertRecord",
 					criarAlertaErro("Erro ao recuperar senha: " + e.getMessage()));

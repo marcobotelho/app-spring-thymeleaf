@@ -3,10 +3,12 @@ package com.projeto.appspringthymeleaf.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.projeto.appspringthymeleaf.model.UsuarioModel;
+import com.projeto.appspringthymeleaf.record.FormSenhaRecord;
 import com.projeto.appspringthymeleaf.repository.UsuarioRepository;
 
 import jakarta.mail.MessagingException;
@@ -24,6 +26,12 @@ public class UsuarioService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private JwtService jwtService;
+
+	@Autowired
+	private UserDetailsService userDetailsService;
 
 	public void save(UsuarioModel model) {
 		usuarioRepository.save(model);
@@ -57,8 +65,10 @@ public class UsuarioService {
 	public void resetPassword(Long usuarioId, String baseURL) throws MessagingException {
 		UsuarioModel usuario = getById(usuarioId);
 		String senhaNova = "123";
-		String linkAcesso = baseURL + "/login";
+		String token = jwtService.gerarToken(usuario.getEmail());
+		String linkAcesso = baseURL + "/redefinir-senha/" + token;
 		usuario.setSenha(passwordEncoder.encode(senhaNova));
+		usuario.setToken(token);
 		usuarioRepository.save(usuario);
 		String corpoEmail = "<html><body>" +
 				"<p>Olá,</p>" +
@@ -70,5 +80,22 @@ public class UsuarioService {
 				"<p>Obrigado.</p>" +
 				"</body></html>";
 		emailService.enviarEmail(usuario.getEmail(), "Recuperação de Senha", corpoEmail, true);
+	}
+
+	public void redefinirSenha(FormSenhaRecord formSenha) {
+		String usuarioEmail = jwtService.extrairUsuarioEmail(formSenha.token());
+		UsuarioModel usuario = usuarioRepository.findByEmail(usuarioEmail).get();
+		if (!formSenha.senhaNova().equals(formSenha.senhaNovaConfirmacao())) {
+			throw new RuntimeException("As senhas novas informadas sao diferentes!");
+		}
+		if (!formSenha.token().equals(usuario.getToken())) {
+			throw new RuntimeException("Recuperação de senha desatualizada! Gere nova recuperação de senha.");
+		}
+		if (!passwordEncoder.matches(formSenha.senhaAtual(), usuario.getSenha())) {
+			throw new RuntimeException("Senha atual incorreta!");
+		}
+		usuario.setSenha(passwordEncoder.encode(formSenha.senhaNova()));
+		usuario.setToken(null);
+		usuarioRepository.save(usuario);
 	}
 }

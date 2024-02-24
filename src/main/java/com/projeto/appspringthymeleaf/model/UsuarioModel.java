@@ -38,6 +38,8 @@ public class UsuarioModel {
 	@Length(min = 6, max = 100, message = "Senha inválida")
 	private String senha;
 
+	private String token;
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "usuario_perfil", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "perfil_id"))
 	private List<PerfilModel> perfis = new ArrayList<>();
@@ -88,6 +90,14 @@ public class UsuarioModel {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	public List<PerfilModel> getPerfis() {

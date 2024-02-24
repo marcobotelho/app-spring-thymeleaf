@@ -20,6 +20,7 @@ public class SecurityConfig {
                         "/login",
                         "/home",
                         "/h2-console/**",
+                        "/redefinir-senha/**"
         };
         public static final String LOGIN_URL = "/login";
         public static final String LOGOUT_URL = "/logout";
@@ -53,6 +54,7 @@ public class SecurityConfig {
                                                 .invalidateHttpSession(true)
                                                 .deleteCookies("JSESSIONID")
                                                 .logoutSuccessUrl(LOGIN_URL + "?logout"));
+                // .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();
         }
@@ -62,6 +64,10 @@ public class SecurityConfig {
                 return new BCryptPasswordEncoder();
         }
 
+        // @Bean
+        // public JwtFilter jwtFilter() {
+        // return new JwtFilter();
+        // }
         // @Bean
         // public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder)
         // {

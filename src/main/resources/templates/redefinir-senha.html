@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html 	xmlns:th="http://www.thymeleaf.org" 
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+		data-bs-theme="dark">
+<head>
+    <title>Redefinir Senha</title>
+    <div th:replace="~{fragments/head :: head}"></div>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <h2 class="text-center mb-4">Redefinir Senha</h2>
+                <div th:replace="~{fragments/alert :: alert(alertRecord=${alertRecord})}"></div>
+                <form th:action="@{/redefinir-senha}" th:object="${formSenha}" method="post">
+                    <input type="hidden" id="token" name="token" th:value="${token}">
+                    <div class="form-group mb-3">
+                        <label for="username">Senha Atual</label>
+                        <input type="password" class="form-control" id="senhaAtual" name="senhaAtual">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="password">Senha Nova</label>
+                        <input type="password" class="form-control" id="senhaNova" name="senhaNova">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="password">Senha Nova Confirmação</label>
+                        <input type="password" class="form-control" id="senhaNovaConfirmacao" name="senhaNovaConfirmacao">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Salvar</button>
+                    <a th:href="@{/redefinir-senha/{token}(token=${token})}" class="btn btn-success">Limpar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
