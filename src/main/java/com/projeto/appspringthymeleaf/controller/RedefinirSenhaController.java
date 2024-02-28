@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.projeto.appspringthymeleaf.record.AlertRecord;
-import com.projeto.appspringthymeleaf.record.FormSenhaRecord;
+import com.projeto.appspringthymeleaf.record.RedefinirSenhaRecord;
 import com.projeto.appspringthymeleaf.service.UsuarioService;
 
 import jakarta.validation.Valid;
@@ -26,7 +26,7 @@ public class RedefinirSenhaController {
 
 	@GetMapping("/{token}")
 	public String ini(@PathVariable("token") String token,
-			@ModelAttribute("formSenha") FormSenhaRecord formSenha,
+			@ModelAttribute("formSenha") RedefinirSenhaRecord formSenha,
 			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model) {
 		model.addAttribute("token", token);
 		return "redefinir-senha";
@@ -46,7 +46,7 @@ public class RedefinirSenhaController {
 	// }
 
 	@PostMapping("")
-	public String salvar(@Valid FormSenhaRecord formSenha, BindingResult bindingResult,
+	public String salvar(@Valid RedefinirSenhaRecord formSenha, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			redirectAttributes.addFlashAttribute("alertRecord",

@@ -3,13 +3,13 @@ package com.projeto.appspringthymeleaf.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.projeto.appspringthymeleaf.model.UsuarioModel;
-import com.projeto.appspringthymeleaf.record.FormSenhaRecord;
+import com.projeto.appspringthymeleaf.record.RedefinirSenhaRecord;
 import com.projeto.appspringthymeleaf.repository.UsuarioRepository;
+import com.projeto.appspringthymeleaf.util.PasswordGeneratorService;
 
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
@@ -31,7 +31,7 @@ public class UsuarioService {
 	private JwtService jwtService;
 
 	@Autowired
-	private UserDetailsService userDetailsService;
+	private PasswordGeneratorService passwordGeneratorService;
 
 	public void save(UsuarioModel model) {
 		usuarioRepository.save(model);
@@ -64,7 +64,7 @@ public class UsuarioService {
 
 	public void resetPassword(Long usuarioId, String baseURL) throws MessagingException {
 		UsuarioModel usuario = getById(usuarioId);
-		String senhaNova = "123";
+		String senhaNova = passwordGeneratorService.generateRandomPassword();
 		String token = jwtService.gerarToken(usuario.getEmail());
 		String linkAcesso = baseURL + "/redefinir-senha/" + token;
 		usuario.setSenha(passwordEncoder.encode(senhaNova));
@@ -82,7 +82,7 @@ public class UsuarioService {
 		emailService.enviarEmail(usuario.getEmail(), "Recuperação de Senha", corpoEmail, true);
 	}
 
-	public void redefinirSenha(FormSenhaRecord formSenha) {
+	public void redefinirSenha(RedefinirSenhaRecord formSenha) {
 		String usuarioEmail = jwtService.extrairUsuarioEmail(formSenha.token());
 		UsuarioModel usuario = usuarioRepository.findByEmail(usuarioEmail).get();
 		if (!formSenha.senhaNova().equals(formSenha.senhaNovaConfirmacao())) {
