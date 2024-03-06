@@ -15,6 +15,12 @@
             <p class="lead">Esta é uma página inicial simples criada com Thymeleaf e Bootstrap.</p>
             <hr class="my-4">
             <p>Ela inclui alguns componentes básicos do Bootstrap, como um jumbotron e botões.</p>
+
+            <div sec:authorize="isAuthenticated()"> 
+                <p>Seja bem-vindo <span sec:authentication="name"></span>!</p>
+                <p>Seus perfis são <span sec:authentication="principal.authorities"></span></p>
+            </div>
+
             <a class="btn btn-primary btn-lg" href="#" role="button">Saiba mais</a>
         </div>
     </div>
