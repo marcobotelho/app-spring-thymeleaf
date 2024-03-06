@@ -21,20 +21,20 @@
             <li class="nav-item">
                 <a class="nav-link active" aria-current="page" th:href="@{/login}" href="#">Login</a>
             </li>
-            <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+            <li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_ADMIN')">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Administrador
+                    Usuário
                 </a>
                 <ul class="dropdown-menu">
-                <li><a class="dropdown-item" th:href="@{/usuario}" href="#">Usuário</a></li>
+                <li><a class="dropdown-item" th:href="@{/usuario}" href="#">Cadastro/Lista</a></li>
                 </ul>
             </li>		        
             <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Usuario
+                    Cliente
                 </a>
                 <ul class="dropdown-menu">
-                <li><a class="dropdown-item" th:href="@{/cliente}" href="#">Cliente</a></li>
+                <li><a class="dropdown-item" th:href="@{/cliente}" href="#">Cadastro/Lista</a></li>
                 </ul>
             </li>		        
             </ul>
