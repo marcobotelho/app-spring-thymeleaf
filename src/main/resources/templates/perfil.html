@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html 	xmlns:th="http://www.thymeleaf.org" 
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+		data-bs-theme="dark">
+<head>
+    <title>Telefone</title>
+    <div th:replace="~{fragments/head :: head}"></div>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+	<div class="card" style="margin:1em">
+	  <div class="card-header text-bg-primary">
+	    <b>Cadastro de Perfil</b>
+	  </div>
+	  <div class="card-body">
+		<div th:replace="~{fragments/alert :: alert(alertRecord=${alertRecord})}"></div>
+		
+        <form id="formCadastro" th:action="@{/perfil}" th:object="${perfil}" method="post" >
+            <input type="hidden" th:field="*{id}">
+			<div class="row"> 
+            	<div class="form-group col-md-3">
+		            <div class="form-floating mb-3">
+		                <input type="text" class="form-control maskTelefone" id="nome" th:field="*{nome}" placeholder="Nome" >
+		                <label for="nome">Nome</label>
+		            </div>            	
+				</div>
+	            <div class="form-group col-md-3">
+		            <div class="form-floating mb-3">
+		                <input type="text" class="form-control maskTelefone" id="descricao" th:field="*{descricao}" placeholder="Descrição" >
+		                <label for="descricao">Descrição</label>
+		            </div>            	
+				</div>
+            </div>            
+            <div class="row"> 
+            	<div class="form-group col-md-6">
+		            <button type="submit" class="btn btn-primary">Salvar</button>
+		            <a th:href="@{/perfil}" class="btn btn-success">Novo</a>
+	            </div>
+			</div>
+        </form>
+	  </div>
+	</div>
+	<div class="card" style="margin:1em">
+	  <div class="card-header text-bg-primary">
+	    <b>Lista de Perfil</b>
+	  </div>
+	  <div class="card-body table-responsive">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="perfil : ${perfis}">
+                    <td th:text="${perfil.id}"></td>
+                    <td th:text="${perfil.nome}"></td>
+                    <td th:text="${perfil.descricao}"></td>
+                    <td>
+                        <a th:href="@{/perfil/editar/{id}(id=${perfil.id})}" class="btn btn-primary btn-sm">Editar</a>
+                        <a th:href="@{/perfil/excluir/{id}(id=${perfil.id})}" class="btn btn-danger btn-sm">Excluir</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>        
+   	  </div>
+	</div>
+	
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
