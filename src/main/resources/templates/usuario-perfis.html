@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html 	xmlns:th="http://www.thymeleaf.org" 
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+		data-bs-theme="dark">
+<head>
+    <title>Usuário - Perfis</title>
+    <div th:replace="~{fragments/head :: head}"></div>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+	<div class="card" style="margin:1em">
+	  <div class="card-header text-bg-primary">
+	    <b>Usuário <span th:text="${usuario.nome}"></span> - Lista de Perfis</b>
+	  </div>
+	  <div class="card-body table-responsive">
+		<div th:replace="~{fragments/alert :: alert(alertRecord=${alertRecord})}"></div>
+		<form th:action="@{/usuario/perfis}" method="post">
+			<input type="hidden" name="usuarioId" th:value="${usuario.id}">
+			<table class="table table-sm">
+				<thead>
+					<tr>
+						<th><input type="checkbox" id="selectAllPerfilIds" onchange="toggleCheckboxes()"></th>
+						<th>ID</th>
+						<th>Nome</th>
+						<th>Descrição</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="perfil : ${perfis}">
+						<td>
+							<input type="checkbox" name="selectedPerfilIds" th:value="${perfil.id}" th:id="${perfil.id}" 
+							th:checked="${#lists.contains(selectedPerfilIds, perfil.id)}" onchange="checkSelectAllPerfilIds()">
+						</td>
+						<td th:text="${perfil.id}"></td>
+						<td th:text="${perfil.nome}"></td>
+						<td th:text="${perfil.descricao}"></td>
+					</tr>
+				</tbody>
+			</table>        
+			<a th:href="@{/usuario}" class="btn btn-secondary">Voltar</a>
+			<button type="submit" class="btn btn-primary">Salvar</button>
+		</form>
+   	  </div>
+	</div>
+	
+    <div th:replace="~{fragments/footer :: footer}"></div>
+	
+	<script>
+		window.onload = function() {
+			checkSelectAllPerfilIds();
+    	};
+
+		function toggleCheckboxes() {
+			var checkboxes = document.getElementsByName('selectedPerfilIds');
+			var selectAllCheckbox = document.getElementById('selectAllPerfilIds');
+			
+			for(var i=0; i<checkboxes.length; i++) {
+				checkboxes[i].checked = selectAllCheckbox.checked;
+			}
+		}
+
+		function checkSelectAllPerfilIds() {
+        var checkboxes = document.getElementsByName('selectedPerfilIds');
+        var selectAllCheckbox = document.getElementById('selectAllPerfilIds');
+        var allChecked = true;
+        
+        for(var i=0; i<checkboxes.length; i++) {
+            if (!checkboxes[i].checked) {
+                allChecked = false;
+                break;
+            }
+        }
+        
+        selectAllCheckbox.checked = allChecked;
+    }
+	</script>
+	
+</body>
+</html>

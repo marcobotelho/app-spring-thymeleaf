@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -42,6 +44,7 @@ public class UsuarioModel {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "usuario_perfil", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "perfil_id"))
+	@JsonIgnoreProperties("perfis")
 	private List<PerfilModel> perfis = new ArrayList<>();
 
 	public UsuarioModel() {
@@ -110,7 +113,7 @@ public class UsuarioModel {
 
 	@Override
 	public String toString() {
-		return "UsuarioModel [id=" + id + ", nome=" + nome + ", email=" + email + "]";
+		return "UsuarioModel [id=" + id + ", nome=" + nome + ", email=" + email + ", perfis=" + perfis + "]";
 	}
 
 	@Override

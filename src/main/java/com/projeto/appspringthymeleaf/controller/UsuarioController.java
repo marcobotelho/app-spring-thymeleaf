@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.projeto.appspringthymeleaf.model.UsuarioModel;
 import com.projeto.appspringthymeleaf.record.AlertRecord;
+import com.projeto.appspringthymeleaf.service.PerfilService;
 import com.projeto.appspringthymeleaf.service.UsuarioService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +26,9 @@ public class UsuarioController {
 
 	@Autowired
 	private UsuarioService usuarioService;
+
+	@Autowired
+	private PerfilService perfilService;
 
 	@GetMapping("")
 	public String ini(@ModelAttribute("usuario") UsuarioModel usuario,
@@ -124,5 +129,31 @@ public class UsuarioController {
 					criarAlertaErro("Erro ao recuperar senha: " + e.getMessage()));
 		}
 		return "redirect:/usuario";
+	}
+
+	@GetMapping("/{id}/perfis")
+	public String usuarioPerfis(@PathVariable Long id,
+			RedirectAttributes redirectAttributes, Model model) {
+
+		model.addAttribute("usuario", usuarioService.getById(id));
+		model.addAttribute("perfis", perfilService.getAll());
+		model.addAttribute("selectedPerfilIds", usuarioService.getSelectedPerfilIds(id));
+
+		return "usuario-perfis";
+	}
+
+	@PostMapping("/perfis")
+	public String salvarUsuarioPerfis(@RequestParam(value = "usuarioId", required = true) Long usuarioId,
+			@RequestParam(value = "selectedPerfilIds", required = false) Long[] selectedPerfilIds,
+			RedirectAttributes redirectAttributes, Model model) {
+		try {
+			usuarioService.salvarUsuarioPerfis(usuarioId, selectedPerfilIds);
+			redirectAttributes.addFlashAttribute("alertRecord",
+					criarAlertaSucesso("Usuário Perfis salvo com sucesso!"));
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("alertRecord",
+					criarAlertaErro("Erro ao salvar Usuário Perfis: " + e.getMessage()));
+		}
+		return "redirect:/usuario/" + usuarioId + "/perfis";
 	}
 }

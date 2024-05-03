@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.projeto.appspringthymeleaf.model.PerfilModel;
 import com.projeto.appspringthymeleaf.model.UsuarioModel;
 import com.projeto.appspringthymeleaf.record.RedefinirSenhaRecord;
+import com.projeto.appspringthymeleaf.repository.PerfilRepository;
 import com.projeto.appspringthymeleaf.repository.UsuarioRepository;
 import com.projeto.appspringthymeleaf.util.PasswordGeneratorService;
 
@@ -32,6 +34,9 @@ public class UsuarioService {
 
 	@Autowired
 	private PasswordGeneratorService passwordGeneratorService;
+
+	@Autowired
+	private PerfilRepository perfilRepository;
 
 	public void save(UsuarioModel model) {
 		usuarioRepository.save(model);
@@ -96,6 +101,34 @@ public class UsuarioService {
 		}
 		usuario.setSenha(passwordEncoder.encode(formSenha.senhaNova()));
 		usuario.setToken(null);
+		usuarioRepository.save(usuario);
+	}
+
+	public Long[] getSelectedPerfilIds(Long usuarioId) {
+		UsuarioModel usuario = usuarioRepository.findById(usuarioId)
+				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+		List<PerfilModel> perfis = usuario.getPerfis();
+		Long[] ids = new Long[perfis.size()];
+		for (int i = 0; i < perfis.size(); i++) {
+			ids[i] = perfis.get(i).getId();
+		}
+		return ids;
+	}
+
+	public void salvarUsuarioPerfis(Long usuarioId, Long[] selectedPerfilIds) {
+		UsuarioModel usuario = usuarioRepository.findById(usuarioId)
+				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+		usuario.getPerfis().clear();
+
+		if (selectedPerfilIds != null) {
+			for (Long perfilId : selectedPerfilIds) {
+				PerfilModel perfil = perfilRepository.findById(perfilId)
+						.orElseThrow(() -> new RuntimeException("Perfil não encontrado!"));
+				usuario.getPerfis().add(perfil);
+			}
+		}
+
 		usuarioRepository.save(usuario);
 	}
 }
