@@ -63,6 +63,7 @@
                     <td>
                         <a th:href="@{/perfil/editar/{id}(id=${perfil.id})}" class="btn btn-primary btn-sm">Editar</a>
                         <a th:href="@{/perfil/excluir/{id}(id=${perfil.id})}" class="btn btn-danger btn-sm">Excluir</a>
+						<a th:href="@{/perfil/{id}/usuarios(id=${perfil.id})}" class="btn btn-warning btn-sm">Usuários</a>
                     </td>
                 </tr>
             </tbody>

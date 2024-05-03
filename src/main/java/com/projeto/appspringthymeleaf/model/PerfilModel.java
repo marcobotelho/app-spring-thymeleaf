@@ -3,6 +3,8 @@ package com.projeto.appspringthymeleaf.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,11 +17,6 @@ import jakarta.validation.constraints.NotBlank;
 @Table(name = "perfil")
 public class PerfilModel {
 
-    @Override
-    public String toString() {
-        return "RoleModel [id=" + id + ", nome=" + nome + "]";
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +28,7 @@ public class PerfilModel {
     private String descricao;
 
     @ManyToMany(mappedBy = "perfis")
+    @JsonIgnoreProperties("perfis")
     private List<UsuarioModel> usuarios = new ArrayList<>();
 
     public PerfilModel() {
@@ -96,6 +94,11 @@ public class PerfilModel {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "PerfilModel [id=" + id + ", nome=" + nome + ", descricao=" + descricao + ", usuarios=" + usuarios + "]";
     }
 
 }

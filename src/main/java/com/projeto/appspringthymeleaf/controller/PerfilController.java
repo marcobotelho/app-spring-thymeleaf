@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.projeto.appspringthymeleaf.model.PerfilModel;
@@ -79,6 +80,32 @@ public class PerfilController {
 					criarAlertaErro("Erro ao excluir perfil: " + e.getMessage()));
 		}
 		return "redirect:/perfil";
+	}
+
+	@GetMapping("/{id}/usuarios")
+	public String perfilUsuarios(@PathVariable Long id,
+			RedirectAttributes redirectAttributes, Model model) {
+
+		model.addAttribute("perfil", perfilService.getById(id));
+		model.addAttribute("usuarios", usuarioService.getAll());
+		model.addAttribute("selectedUsuarioIds", perfilService.getSelectedUsuarioIds(id));
+
+		return "perfil-usuarios";
+	}
+
+	@PostMapping("/usuarios")
+	public String salvarPerfilUsuarios(@RequestParam(value = "perfilId", required = true) Long perfilId,
+			@RequestParam(value = "selectedUsuarioIds", required = false) Long[] selectedUsuarioIds,
+			RedirectAttributes redirectAttributes, Model model) {
+		try {
+			perfilService.salvarPerfilUsuarios(perfilId, selectedUsuarioIds);
+			redirectAttributes.addFlashAttribute("alertRecord",
+					criarAlertaSucesso("Perfil Usuários salvo com sucesso!"));
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("alertRecord",
+					criarAlertaErro("Erro ao salvar Perfil Usuários: " + e.getMessage()));
+		}
+		return "redirect:/perfil/" + perfilId + "/usuarios";
 	}
 
 	private AlertRecord criarAlertaSucesso(String mensagem) {
