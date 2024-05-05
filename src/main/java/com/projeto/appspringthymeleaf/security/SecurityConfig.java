@@ -24,13 +24,13 @@ public class SecurityConfig {
         };
         public static final String LOGIN_URL = "/login";
         public static final String LOGOUT_URL = "/logout";
-        public static final String LOGIN_FAIL_URL = LOGIN_URL + "?error";
         public static final String DEFAULT_SUCCESS_URL = "/home";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
                 http.authorizeHttpRequests(request -> request.requestMatchers(ENDPOINTS_WHITELIST).permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/user/**").hasRole("USER")
@@ -41,11 +41,15 @@ public class SecurityConfig {
                                 .csrf(csrf -> csrf
                                                 .ignoringRequestMatchers(ENDPOINTS_WHITELIST).disable())
                                 .headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))
-                                .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedPage("/erro/403"))
+                                .exceptionHandling(exceptionHandling -> exceptionHandling
+                                                .accessDeniedPage("/erro/403")
+                                                .authenticationEntryPoint((request, response, authException) -> response
+                                                                .sendRedirect(request.getContextPath() + LOGIN_URL
+                                                                                + "?error=unauthenticated")))
                                 .formLogin(form -> form
                                                 .loginPage(LOGIN_URL)
                                                 .loginProcessingUrl(LOGIN_URL)
-                                                .failureUrl(LOGIN_FAIL_URL)
+                                                .failureUrl(LOGIN_URL + "?error=badCredentials")
                                                 .usernameParameter(USERNAME)
                                                 .passwordParameter(PASSWORD)
                                                 .defaultSuccessUrl(DEFAULT_SUCCESS_URL))
@@ -53,7 +57,7 @@ public class SecurityConfig {
                                                 .logoutUrl("/logout")
                                                 .invalidateHttpSession(true)
                                                 .deleteCookies("JSESSIONID")
-                                                .logoutSuccessUrl(LOGIN_URL + "?logout"));
+                                                .logoutSuccessUrl(LOGIN_URL + "?success=logout"));
                 // .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();

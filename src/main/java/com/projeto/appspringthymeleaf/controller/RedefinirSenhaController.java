@@ -54,9 +54,9 @@ public class RedefinirSenhaController {
 		} else {
 			try {
 				usuarioService.redefinirSenha(formSenha);
-				redirectAttributes.addFlashAttribute("alertRecord",
-						criarAlertaSucesso("Senha redefinida com sucesso!"));
-				return "redirect:/login?senhaRedefinida";
+				// redirectAttributes.addFlashAttribute("alertRecord", criarAlertaSucesso("Senha
+				// redefinida com sucesso!"));
+				return "redirect:/login?success=passwordChanged";
 			} catch (Exception e) {
 				redirectAttributes.addFlashAttribute("alertRecord",
 						criarAlertaErro(e.getMessage()));

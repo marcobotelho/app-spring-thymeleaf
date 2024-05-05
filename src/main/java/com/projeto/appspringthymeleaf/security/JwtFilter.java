@@ -1,8 +1,6 @@
 package com.projeto.appspringthymeleaf.security;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,18 +23,16 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    // Rotas que devem ser ignoradas
-    private final List<String> rotasExcecoes = Arrays.asList("/js", "/login");
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Verifique se a rota atual está na lista de exceções
-        if (rotasExcecoes.stream().anyMatch(request.getServletPath()::startsWith)) {
-            // Se estiver na lista de exceções, não processe o token JWT
-            filterChain.doFilter(request, response);
-            return;
+        // Verifica se a solicitação é para um dos URLs da lista ENDPOINTS_WHITELIST
+        for (String endpoint : SecurityConfig.ENDPOINTS_WHITELIST) {
+            if (request.getServletPath().startsWith(endpoint.replace("/**", ""))) {
+                filterChain.doFilter(request, response);
+                return;
+            }
         }
 
         // Obtenha o token JWT do cabeçalho Authorization
