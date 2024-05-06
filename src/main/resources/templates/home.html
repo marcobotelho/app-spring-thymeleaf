@@ -11,6 +11,7 @@
 
     <div class="container">
         <div class="jumbotron mt-5">
+            <div th:replace="~{fragments/alert :: alert(alertRecord=${alertRecord})}"></div>
             <h1 class="display-4">Bem-vindo à Minha Página Inicial</h1>
             <p class="lead">Esta é uma página inicial simples criada com Thymeleaf e Bootstrap.</p>
             <hr class="my-4">

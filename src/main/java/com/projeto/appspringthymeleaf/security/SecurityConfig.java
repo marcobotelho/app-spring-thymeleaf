@@ -20,7 +20,7 @@ public class SecurityConfig {
                         "/login",
                         "/home",
                         "/h2-console/**",
-                        "/redefinir-senha/**"
+                        "/public/**"
         };
         public static final String LOGIN_URL = "/login";
         public static final String LOGOUT_URL = "/logout";
@@ -58,8 +58,8 @@ public class SecurityConfig {
                                                 .invalidateHttpSession(true)
                                                 .deleteCookies("JSESSIONID")
                                                 .logoutSuccessUrl(LOGIN_URL + "?success=logout"));
-                // .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
-
+                // http.addFilterBefore(jwtFilter(),UsernamePasswordAuthenticationFilter.class);
+                // http.anonymous(anonymous -> anonymous.disable());
                 return http.build();
         }
 

@@ -29,7 +29,7 @@ public class LoginController {
                         new AlertRecord("danger", "Erro!", "Você precisa fazer login para acessar esta página."));
             } else if (error.equals("badCredentials")) {
                 model.addAttribute("alertRecord",
-                        new AlertRecord("danger", "Erro!", "Usúrio ou senha inválidos. Tente novamente."));
+                        new AlertRecord("danger", "Erro!", "Usuário ou senha inválidos. Tente novamente."));
             }
         }
         return "login";

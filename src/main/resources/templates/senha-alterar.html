@@ -3,7 +3,7 @@
 		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
 		data-bs-theme="dark">
 <head>
-    <title>Redefinir Senha</title>
+    <title>Alterar Senha</title>
     <div th:replace="~{fragments/head :: head}"></div>
 </head>
 <body>
@@ -11,10 +11,9 @@
     <div class="container">
         <div class="row justify-content-center mt-5">
             <div class="col-md-6">
-                <h2 class="text-center mb-4">Redefinir Senha</h2>
+                <h2 class="text-center mb-4">Alterar Senha</h2>
                 <div th:replace="~{fragments/alert :: alert(alertRecord=${alertRecord})}"></div>
-                <form th:action="@{/redefinir-senha}" th:object="${formSenha}" method="post">
-                    <input type="hidden" id="token" name="token" th:value="${token}">
+                <form th:action="@{/usuario/senha-alterar}" method="post">
                     <div class="form-group mb-3">
                         <label for="username">Senha Atual</label>
                         <input type="password" class="form-control" id="senhaAtual" name="senhaAtual">
@@ -28,7 +27,7 @@
                         <input type="password" class="form-control" id="senhaNovaConfirmacao" name="senhaNovaConfirmacao">
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Salvar</button>
-                    <a th:href="@{/redefinir-senha/{token}(token=${token})}" class="btn btn-success">Limpar</a>
+                    <a th:href="@{/usuario/senha-alterar}" class="btn btn-success">Limpar</a>
                 </form>
             </div>
         </div>

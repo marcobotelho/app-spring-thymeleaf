@@ -17,7 +17,7 @@ import com.projeto.appspringthymeleaf.record.AlertRecord;
 import com.projeto.appspringthymeleaf.service.PerfilService;
 import com.projeto.appspringthymeleaf.service.UsuarioService;
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 @Controller
@@ -115,22 +115,6 @@ public class UsuarioController {
 		return sb.toString();
 	}
 
-	@GetMapping("/recuperar-senha/{id}")
-	public String recuperarSenha(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
-			HttpServletRequest request) {
-		try {
-			String baseURL = request.getRequestURL().substring(0,
-					request.getRequestURL().indexOf(request.getServletPath()));
-			usuarioService.resetPassword(id, baseURL);
-			redirectAttributes.addFlashAttribute("alertRecord",
-					criarAlertaSucesso("Senha recuperada com sucesso! E-mail enviado com nova senha."));
-		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("alertRecord",
-					criarAlertaErro("Erro ao recuperar senha: " + e.getMessage()));
-		}
-		return "redirect:/usuario";
-	}
-
 	@GetMapping("/{id}/perfis")
 	public String usuarioPerfis(@PathVariable Long id,
 			RedirectAttributes redirectAttributes, Model model) {
@@ -156,4 +140,43 @@ public class UsuarioController {
 		}
 		return "redirect:/usuario/" + usuarioId + "/perfis";
 	}
+
+	@GetMapping("/senha-recuperar/{email}")
+	public String getSenhaRecuperar(@PathVariable("email") String email, Model model,
+			RedirectAttributes redirectAttributes)
+			throws MessagingException {
+		if (email == null || email.isEmpty()) {
+			redirectAttributes.addFlashAttribute("alertRecord", new AlertRecord("warning", "Atenção!",
+					"Email obrigatório."));
+		} else {
+			usuarioService.senhaRecuperar(email);
+			redirectAttributes.addFlashAttribute("alertRecord", new AlertRecord("success", "Sucesso!",
+					"Email com recuperação senha enviado para o email do usuário."));
+		}
+		return "redirect:/usuario";
+	}
+
+	@GetMapping("/senha-alterar")
+	public String getSenhaAlterar() {
+		return "senha-alterar";
+	}
+
+	@PostMapping("/senha-alterar")
+	public String postSenhaAlterar(@RequestParam(name = "senhaAtual") String senhaAtual,
+			@RequestParam(name = "senhaNova") String senhaNova,
+			@RequestParam(name = "senhaNovaConfirmacao") String senhaNovaConfirmacao,
+			Model model) {
+
+		try {
+			usuarioService.senhaAlterar(senhaAtual, senhaNova, senhaNovaConfirmacao);
+			model.addAttribute("alertRecord",
+					new AlertRecord("success", "Sucesso!", "Senha alterada com sucesso."));
+			return "senha-alterar";
+		} catch (Exception e) {
+			model.addAttribute("alertRecord",
+					new AlertRecord("danger", "Erro!", e.getMessage()));
+		}
+		return "senha-alterar";
+	}
+
 }
