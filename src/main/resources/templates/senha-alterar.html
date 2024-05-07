@@ -13,11 +13,12 @@
             <div class="col-md-6">
                 <h2 class="text-center mb-4">Alterar Senha</h2>
                 <div th:replace="~{fragments/alert :: alert(alertRecord=${alertRecord})}"></div>
-                <form th:action="@{/usuario/senha-alterar}" method="post">
-                    <div class="form-group mb-3">
+                <form th:action="@{/public/senha/alterar}" method="post">
+                    <!-- <div class="form-group mb-3">
                         <label for="username">Senha Atual</label>
                         <input type="password" class="form-control" id="senhaAtual" name="senhaAtual">
-                    </div>
+                    </div> -->
+                    <input type="hidden" id="token" name="token" th:value="${token}"/>
                     <div class="form-group mb-3">
                         <label for="password">Senha Nova</label>
                         <input type="password" class="form-control" id="senhaNova" name="senhaNova">
@@ -27,7 +28,7 @@
                         <input type="password" class="form-control" id="senhaNovaConfirmacao" name="senhaNovaConfirmacao">
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Salvar</button>
-                    <a th:href="@{/usuario/senha-alterar}" class="btn btn-success">Limpar</a>
+                    <a th:href="@{/public/senha/alterar/{token}(token=${token})}" class="btn btn-success">Limpar</a>
                 </form>
             </div>
         </div>

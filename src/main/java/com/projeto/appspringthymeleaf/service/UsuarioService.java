@@ -1,7 +1,6 @@
 package com.projeto.appspringthymeleaf.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -32,8 +31,8 @@ public class UsuarioService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	// @Autowired
-	// private JwtService jwtService;
+	@Autowired
+	private JwtService jwtService;
 
 	@Autowired
 	private PasswordGeneratorService passwordGeneratorService;
@@ -116,39 +115,38 @@ public class UsuarioService {
 		}
 	}
 
-	public void senhaRecuperar(String email) throws MessagingException {
-		UsuarioModel usuario = usuarioRepository.findByEmail(email)
-				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
-		String senhaNova = passwordGeneratorService.generateRandomPassword();
-		String linkAcesso = getBaseUrl() + "/usuario/senha-alterar";
-		usuario.setSenha(passwordEncoder.encode(senhaNova));
-		usuarioRepository.save(usuario);
+	private String getCorpoEmailRecuperacao(String token) {
+		String linkAcesso = getBaseUrl() + "/public/senha/alterar/" + token;
 		String corpoEmail = "<html><body>" +
 				"<p>Olá,</p>" +
-				"<p>Você solicitou uma recuperação de senha. Aqui está sua nova senha: <strong>" + senhaNova
-				+ "</strong></p>" +
-				"<p>Recomandamos que altere a sua senha." +
-				"<p>Para acessar sua conta, clique no link abaixo:</p>" +
-				"<p><a href=\"" + linkAcesso + "\">Acessar Sua Conta</a></p>" +
+				"<p>Você solicitou uma recuperação de senha.</p>" +
+				"<p>Para criar uma nova senha, clique no link abaixo:</p>" +
+				"<p><a href=\"" + linkAcesso + "\">Alterar Senha</a></p>" +
 				"<p>Se não foi você quem solicitou essa recuperação de senha, ignore este e-mail.</p>" +
 				"<p>Obrigado.</p>" +
 				"</body></html>";
-		emailService.enviarEmail(usuario.getEmail(), "Recuperação de Senha", corpoEmail, true);
+		return corpoEmail;
 	}
 
-	public void senhaAlterar(String senhaAtual, String senhaNova, String senhaNovaConfirmacao) {
+	public void senhaRecuperar(String email) throws MessagingException {
+		UsuarioModel usuario = usuarioRepository.findByEmail(email)
+				.orElseThrow(() -> new RuntimeException("Usuário com e-mail não encontrado."));
+		String token = jwtService.gerarToken(email);
+		usuario.setToken(token);
+		usuarioRepository.save(usuario);
+		emailService.enviarEmail(usuario.getEmail(), "Recuperação de Senha", getCorpoEmailRecuperacao(token), true);
+	}
+
+	public void senhaAlterar(String token, String senhaNova, String senhaNovaConfirmacao) {
 		if (!senhaNova.equals(senhaNovaConfirmacao)) {
-			throw new RuntimeException("As senhas novas informadas sao diferentes!");
+			throw new RuntimeException("As senhas informadas sao diferentes.");
 		}
-		String usuarioAutenticado = getUsuarioAutenticado();
-		Optional<UsuarioModel> usuarioOptional = usuarioRepository.findByEmail(usuarioAutenticado);
-		if (usuarioOptional == null) {
-			throw new RuntimeException("Usuário '" + usuarioAutenticado + "' não encontrado!");
+		if (!jwtService.validarToken(token)) {
+			throw new RuntimeException(
+					"Recuperação senha inválida ou expirada. Gere nova recuperação para alterar a senha.");
 		}
-		UsuarioModel usuario = usuarioOptional.get();
-		if (!passwordEncoder.matches(senhaAtual, usuario.getSenha())) {
-			throw new RuntimeException("Senha atual incorreta!");
-		}
+		UsuarioModel usuario = usuarioRepository.findByToken(token)
+				.orElseThrow(() -> new RuntimeException("Usuário com recuperação de senha não encontrado."));
 		usuario.setSenha(passwordEncoder.encode(senhaNova));
 		usuario.setToken(null);
 		usuarioRepository.save(usuario);

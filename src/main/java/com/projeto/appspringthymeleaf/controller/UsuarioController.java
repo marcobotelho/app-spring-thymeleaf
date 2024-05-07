@@ -141,7 +141,7 @@ public class UsuarioController {
 		return "redirect:/usuario/" + usuarioId + "/perfis";
 	}
 
-	@GetMapping("/senha-recuperar/{email}")
+	@GetMapping("/senha/recuperar/{email}")
 	public String getSenhaRecuperar(@PathVariable("email") String email, Model model,
 			RedirectAttributes redirectAttributes)
 			throws MessagingException {

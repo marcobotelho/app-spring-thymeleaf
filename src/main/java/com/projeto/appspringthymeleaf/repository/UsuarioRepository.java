@@ -9,4 +9,6 @@ import com.projeto.appspringthymeleaf.model.UsuarioModel;
 public interface UsuarioRepository extends JpaRepository<UsuarioModel, Long> {
 
     Optional<UsuarioModel> findByEmail(String email);
+
+    Optional<UsuarioModel> findByToken(String token);
 }
