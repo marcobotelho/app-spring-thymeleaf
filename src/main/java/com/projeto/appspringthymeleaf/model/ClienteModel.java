@@ -10,9 +10,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -48,9 +51,9 @@ public class ClienteModel {
 
 	private String bairro;
 
-	private String municipio;
-
-	private String estado;
+	@ManyToOne
+	@JoinColumn(name = "municipio_id", foreignKey = @ForeignKey(name = "fk_cliente_municipio_id"))
+	private MunicipioModel municipio;
 
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<TelefoneModel> telefones;
@@ -60,7 +63,7 @@ public class ClienteModel {
 	}
 
 	public ClienteModel(String nome, String email, Integer idade, LocalDate dataNascimento,
-			String cep, String endereco, String bairro, String municipio, String estado) {
+			String cep, String endereco, String bairro, MunicipioModel municipio) {
 		this.nome = nome;
 		this.email = email;
 		this.idade = idade;
@@ -69,7 +72,6 @@ public class ClienteModel {
 		this.endereco = endereco;
 		this.bairro = bairro;
 		this.municipio = municipio;
-		this.estado = estado;
 	}
 
 	public Long getId() {
@@ -136,20 +138,12 @@ public class ClienteModel {
 		this.bairro = bairro;
 	}
 
-	public String getMunicipio() {
+	public MunicipioModel getMunicipio() {
 		return municipio;
 	}
 
-	public void setMunicipio(String municipio) {
+	public void setMunicipio(MunicipioModel municipio) {
 		this.municipio = municipio;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
 	}
 
 	public List<TelefoneModel> getTelefones() {
@@ -189,7 +183,7 @@ public class ClienteModel {
 	public String toString() {
 		return "ClienteModel [id=" + id + ", nome=" + nome + ", email=" + email + ", idade=" + idade
 				+ ", dataNascimento=" + dataNascimento + ", cep=" + cep + ", endereco=" + endereco + ", bairro="
-				+ bairro + ", municipio=" + municipio + ", estado=" + estado + "]";
+				+ bairro + ", municipio=" + municipio + "]";
 	}
 
 }

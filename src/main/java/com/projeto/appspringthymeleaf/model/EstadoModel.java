@@ -2,6 +2,8 @@ package com.projeto.appspringthymeleaf.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,7 +25,8 @@ public class EstadoModel {
 	@NotBlank(message = "Sigla obrigatória")
 	private String sigla;
 
-	@OneToMany(mappedBy = "estado", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "estado", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@JsonIgnoreProperties("estado")
 	private List<MunicipioModel> municipios;
 
 	public EstadoModel() {

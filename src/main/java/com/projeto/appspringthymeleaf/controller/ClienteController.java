@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.projeto.appspringthymeleaf.model.ClienteModel;
 import com.projeto.appspringthymeleaf.record.AlertRecord;
 import com.projeto.appspringthymeleaf.service.ClienteService;
+import com.projeto.appspringthymeleaf.service.EstadoService;
 
 import jakarta.validation.Valid;
 
@@ -24,9 +25,13 @@ public class ClienteController {
 	@Autowired
 	private ClienteService clienteService;
 
+	@Autowired
+	private EstadoService estadoService;
+
 	@GetMapping("")
 	public String ini(@ModelAttribute("cliente") ClienteModel cliente,
 			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model) {
+		model.addAttribute("estados", estadoService.getAll());
 		model.addAttribute("cliente", cliente);
 		model.addAttribute("clientes", clienteService.getAll());
 		return "cliente";
@@ -39,7 +44,8 @@ public class ClienteController {
 
 	@GetMapping("/editar/{id}")
 	public String editar(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-		redirectAttributes.addFlashAttribute("cliente", clienteService.getById(id));
+		ClienteModel cliente = clienteService.getById(id);
+		redirectAttributes.addFlashAttribute("cliente", cliente);
 		return "redirect:/cliente";
 	}
 

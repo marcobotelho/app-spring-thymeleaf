@@ -62,16 +62,22 @@
 		                <label for="bairro">Bairro</label>
 	            	</div>
 	            </div>
-	            <div class="form-group col-md-3">
-	            	<div class="form-floating mb-3">
-		                <input type="text" class="form-control" id="municipio" th:field="*{municipio}" placeholder="Município">
-		                <label for="municipio">Município</label>
-	            	</div>
-	            </div>
 	            <div class="form-group col-md-1">
 	            	<div class="form-floating mb-3">
-		                <input type="text" class="form-control" id="estado" th:field="*{estado}" placeholder="Estado">
-		                <label for="estado">Estado</label>
+						<select class="form-select" id="estado" aria-label="Floating label select example" th:field="*{municipio.estado.id}">
+							<option value=""></option>
+							<option th:each="estado : ${estados}" th:value="${estado.id}" th:text="${estado.sigla}"></option>
+						</select>
+						<label for="estado">Estado</label>
+	            	</div>
+	            </div>
+	            <div class="form-group col-md-3">
+	            	<div class="form-floating mb-3">
+						<select class="form-select" id="municipio" aria-label="Floating label select example" th:field="*{municipio.id}">
+							<option value=""></option>
+							<option th:each="municipio : *{municipio.estado.municipios}" th:value="${municipio.id}" th:text="${municipio.nome}"></option> 
+						</select>
+						<label for="municipio">Municipio</label>
 	            	</div>
 	            </div>
             </div>
@@ -117,8 +123,43 @@
         </table>        
    	  </div>
 	</div>
-	
+
     <div th:replace="~{fragments/footer :: footer}"></div>
+
+	<script th:inline="javascript">
+		$(document).ready(function() {
+			$('#estado').change(function() {
+				var estadoId = $(this).val();
+				if (estadoId) {
+					getMunicipios(estadoId);
+				} else {
+					$('#municipio').html('<option value=""></option>');
+				}
+			});
+		});
+	
+		function getMunicipios(estadoId) {
+			var contextRoot = /*[[@{/}]]*/ '';
+			//alert(contextRoot);
+			
+			$.ajax({
+				url: contextRoot + 'municipio/' + estadoId,
+				type: 'GET',
+				success: function(data) {
+					var options = '<option value=""></option>';
+					data.forEach(function(municipio) {
+						options += `<option value="${municipio.id}">${municipio.nome}</option>`;
+					});
+					$('#municipio').html(options);
+				},
+				error: function(xhr, status, error) {
+					var errorMessage = (xhr.responseJSON && xhr.responseJSON.message) || 'Erro ao carregar municípios';
+					console.error(errorMessage);
+					alert(errorMessage);
+				}
+			});
+		}
+	</script>
 	
 </body>
 </html>

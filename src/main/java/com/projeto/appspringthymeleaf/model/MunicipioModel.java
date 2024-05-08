@@ -1,10 +1,15 @@
 package com.projeto.appspringthymeleaf.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -21,6 +26,10 @@ public class MunicipioModel {
 	@ManyToOne
 	@JoinColumn(name = "estado_id", nullable = false, foreignKey = @ForeignKey(name = "fk_municipio_estado_id"))
 	private EstadoModel estado;
+
+	@OneToMany(mappedBy = "municipio")
+	@JsonIgnore
+	private List<ClienteModel> clientes;
 
 	public MunicipioModel() {
 
@@ -56,6 +65,14 @@ public class MunicipioModel {
 		this.estado = estado;
 	}
 
+	public List<ClienteModel> getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(List<ClienteModel> clientes) {
+		this.clientes = clientes;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -83,7 +100,7 @@ public class MunicipioModel {
 
 	@Override
 	public String toString() {
-		return "CidadeModel [id=" + id + ", nome=" + nome + ", estado=" + estado + "]";
+		return "MunicipioModel [id=" + id + ", nome=" + nome + ", estado=" + estado + "]";
 	}
 
 }

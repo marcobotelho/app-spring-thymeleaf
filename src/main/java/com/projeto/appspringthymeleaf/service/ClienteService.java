@@ -31,6 +31,14 @@ public class ClienteService {
 		cliente.setEmail(model.getEmail());
 		cliente.setIdade(model.getIdade());
 		cliente.setDataNascimento(model.getDataNascimento());
+		cliente.setCep(model.getCep());
+		cliente.setEndereco(model.getEndereco());
+		cliente.setBairro(model.getBairro());
+		if (model.getMunicipio() != null && model.getMunicipio().getId() != null) {
+			cliente.setMunicipio(model.getMunicipio());
+		} else {
+			cliente.setMunicipio(null);
+		}
 		clienteRepository.save(cliente);
 	}
 
