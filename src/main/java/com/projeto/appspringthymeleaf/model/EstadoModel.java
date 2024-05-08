@@ -24,7 +24,7 @@ public class EstadoModel {
 	private String sigla;
 
 	@OneToMany(mappedBy = "estado", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	private List<MunicipioModel> cidades;
+	private List<MunicipioModel> municipios;
 
 	public EstadoModel() {
 
@@ -60,12 +60,12 @@ public class EstadoModel {
 		this.sigla = sigla;
 	}
 
-	public List<MunicipioModel> getCidades() {
-		return cidades;
+	public List<MunicipioModel> getMunicipios() {
+		return municipios;
 	}
 
-	public void setCidades(List<MunicipioModel> cidades) {
-		this.cidades = cidades;
+	public void setMunicipios(List<MunicipioModel> municipios) {
+		this.municipios = municipios;
 	}
 
 	@Override

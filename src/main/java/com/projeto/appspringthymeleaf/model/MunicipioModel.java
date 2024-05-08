@@ -19,7 +19,7 @@ public class MunicipioModel {
 	private String nome;
 
 	@ManyToOne
-	@JoinColumn(name = "estado_id", nullable = false, foreignKey = @ForeignKey(name = "fk_cidade_estado_id"))
+	@JoinColumn(name = "estado_id", nullable = false, foreignKey = @ForeignKey(name = "fk_municipio_estado_id"))
 	private EstadoModel estado;
 
 	public MunicipioModel() {
