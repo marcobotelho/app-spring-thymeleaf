@@ -43,8 +43,10 @@ public class UsuarioService {
 	@Autowired
 	private HttpServletRequest request;
 
-	public void save(UsuarioModel model) {
+	public void save(UsuarioModel model) throws MessagingException {
+		model.setSenha(passwordEncoder.encode(passwordGeneratorService.generateRandomPassword()));
 		usuarioRepository.save(model);
+		senhaRecuperar(model.getEmail());
 	}
 
 	public void delete(UsuarioModel model) {

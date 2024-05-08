@@ -50,7 +50,7 @@
                     Senha
                 </a>
                 <ul class="dropdown-menu">
-                <li><a class="dropdown-item" th:href="@{/usuario/senha-alterar}" href="#">Alterar</a></li>
+                <li><a class="dropdown-item" th:href="@{/public/senha/recuperar?email={email}(email=${#authentication.name})}" href="#">Recuperar|Alterar</a></li>
                 </ul>
             </li>		        
             </ul>

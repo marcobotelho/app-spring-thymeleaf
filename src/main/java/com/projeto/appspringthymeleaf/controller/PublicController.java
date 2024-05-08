@@ -28,7 +28,13 @@ public class PublicController {
     private UsuarioService usuarioService;
 
     @GetMapping("/senha/recuperar")
-    public String getSenhaRecuperar() {
+    public String getSenhaRecuperar(@RequestParam(name = "email", required = false) String email,
+            Model model) {
+        if (email != null) {
+            model.addAttribute("email", email);
+        } else {
+            model.addAttribute("email", "");
+        }
         return "senha-recuperar";
     }
 

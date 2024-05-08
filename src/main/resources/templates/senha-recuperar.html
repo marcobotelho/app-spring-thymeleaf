@@ -16,9 +16,9 @@
                 <form th:action="@{/public/senha/recuperar}" method="post">
                     <div class="form-group mb-3">
                         <label for="email">E-Mail</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <input type="email" class="form-control" id="email" name="email" th:value="${email}" required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Salvar</button>
+                    <button type="submit" class="btn btn-primary btn-block">Enviar E-mail</button>
                     <a th:href="@{/public/senha/recuperar}" class="btn btn-success">Limpar</a>
                 </form>
             </div>

@@ -17,9 +17,6 @@ import com.projeto.appspringthymeleaf.record.AlertRecord;
 import com.projeto.appspringthymeleaf.service.PerfilService;
 import com.projeto.appspringthymeleaf.service.UsuarioService;
 
-import jakarta.mail.MessagingException;
-import jakarta.validation.Valid;
-
 @Controller
 @RequestMapping("/usuario")
 public class UsuarioController {
@@ -50,7 +47,7 @@ public class UsuarioController {
 	}
 
 	@PostMapping("")
-	public String salvar(@Valid UsuarioModel usuario, BindingResult bindingResult,
+	public String salvar(UsuarioModel usuario, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			redirectAttributes.addFlashAttribute("alertRecord", criarAlertaErroValidacao(bindingResult));
@@ -139,44 +136,6 @@ public class UsuarioController {
 					criarAlertaErro("Erro ao salvar Usuário Perfis: " + e.getMessage()));
 		}
 		return "redirect:/usuario/" + usuarioId + "/perfis";
-	}
-
-	@GetMapping("/senha/recuperar/{email}")
-	public String getSenhaRecuperar(@PathVariable("email") String email, Model model,
-			RedirectAttributes redirectAttributes)
-			throws MessagingException {
-		if (email == null || email.isEmpty()) {
-			redirectAttributes.addFlashAttribute("alertRecord", new AlertRecord("warning", "Atenção!",
-					"Email obrigatório."));
-		} else {
-			usuarioService.senhaRecuperar(email);
-			redirectAttributes.addFlashAttribute("alertRecord", new AlertRecord("success", "Sucesso!",
-					"Email com recuperação senha enviado para o email do usuário."));
-		}
-		return "redirect:/usuario";
-	}
-
-	@GetMapping("/senha-alterar")
-	public String getSenhaAlterar() {
-		return "senha-alterar";
-	}
-
-	@PostMapping("/senha-alterar")
-	public String postSenhaAlterar(@RequestParam(name = "senhaAtual") String senhaAtual,
-			@RequestParam(name = "senhaNova") String senhaNova,
-			@RequestParam(name = "senhaNovaConfirmacao") String senhaNovaConfirmacao,
-			Model model) {
-
-		try {
-			usuarioService.senhaAlterar(senhaAtual, senhaNova, senhaNovaConfirmacao);
-			model.addAttribute("alertRecord",
-					new AlertRecord("success", "Sucesso!", "Senha alterada com sucesso."));
-			return "senha-alterar";
-		} catch (Exception e) {
-			model.addAttribute("alertRecord",
-					new AlertRecord("danger", "Erro!", e.getMessage()));
-		}
-		return "senha-alterar";
 	}
 
 }
