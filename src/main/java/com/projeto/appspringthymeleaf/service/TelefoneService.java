@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.projeto.appspringthymeleaf.dto.TelefoneDTO;
+import com.projeto.appspringthymeleaf.mapper.TelefoneMapper;
 import com.projeto.appspringthymeleaf.model.TelefoneModel;
 import com.projeto.appspringthymeleaf.repository.TelefoneRepository;
 
@@ -17,16 +19,15 @@ public class TelefoneService {
 	@Autowired
 	private TelefoneRepository telefoneRepository;
 
-	public void save(TelefoneModel model) {
-		if (model.getId() != null) {
-			telefoneRepository.findById(model.getId())
-					.orElseThrow(() -> new RuntimeException("Telefone com id " + model.getId() + " não encontrado!"));
+	public void save(TelefoneDTO dto) {
+		if (dto.getId() != null && !telefoneRepository.existsById(dto.getId())) {
+			new RuntimeException("Telefone com id " + dto.getId() + " não encontrado!");
 		}
-		telefoneRepository.save(model);
+		telefoneRepository.save(TelefoneMapper.converterParaModel(dto));
 	}
 
-	public void delete(TelefoneModel model) {
-		telefoneRepository.delete(model);
+	public void delete(TelefoneDTO dto) {
+		telefoneRepository.delete(TelefoneMapper.converterParaModel(dto));
 	}
 
 	public void deleteById(Long id) {
@@ -34,12 +35,13 @@ public class TelefoneService {
 		telefoneRepository.deleteById(id);
 	}
 
-	public TelefoneModel getById(Long id) {
-		return telefoneRepository.findById(id)
+	public TelefoneDTO getById(Long id) {
+		TelefoneModel model = telefoneRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Telefone com id " + id + " não encontrado!"));
+		return TelefoneMapper.converterParaDTO(model);
 	}
 
-	public List<TelefoneModel> getAll(Long clienteId) {
-		return telefoneRepository.findByClienteId(clienteId);
+	public List<TelefoneDTO> getAll(Long clienteId) {
+		return TelefoneMapper.converterParaDTOList(telefoneRepository.findByClienteId(clienteId));
 	}
 }

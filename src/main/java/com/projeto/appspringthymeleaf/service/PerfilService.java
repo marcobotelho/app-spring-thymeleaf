@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.projeto.appspringthymeleaf.dto.PerfilDTO;
+import com.projeto.appspringthymeleaf.mapper.PerfilMapper;
 import com.projeto.appspringthymeleaf.model.PerfilModel;
 import com.projeto.appspringthymeleaf.model.UsuarioModel;
 import com.projeto.appspringthymeleaf.repository.PerfilRepository;
@@ -22,15 +24,15 @@ public class PerfilService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public void save(PerfilModel model) {
-        if (model.getId() != null) {
-            perfilRepository.findById(model.getId())
-                    .orElseThrow(() -> new RuntimeException("Role com id " + model.getId() + " não encontrado!"));
+    public void save(PerfilDTO dto) {
+        if (dto.getId() != null && !perfilRepository.existsById(dto.getId())) {
+            throw new RuntimeException("Perfil com id " + dto.getId() + " não encontrado!");
         }
-        perfilRepository.save(model);
+        perfilRepository.save(PerfilMapper.converterParaModel(dto));
     }
 
-    public void delete(PerfilModel model) {
+    public void delete(PerfilDTO dto) {
+        PerfilModel model = PerfilMapper.converterParaModel(dto);
         perfilRepository.delete(model);
     }
 
@@ -39,13 +41,14 @@ public class PerfilService {
         perfilRepository.deleteById(id);
     }
 
-    public PerfilModel getById(Long id) {
-        return perfilRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Role com id " + id + " não encontrado!"));
+    public PerfilDTO getById(Long id) {
+        PerfilModel model = perfilRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Perfil com id " + id + " não encontrado!"));
+        return PerfilMapper.converterParaDTO(model);
     }
 
-    public List<PerfilModel> getAll() {
-        return perfilRepository.findAll();
+    public List<PerfilDTO> getAll() {
+        return PerfilMapper.converterParaDTOList(perfilRepository.findAll());
     }
 
     public Long[] getSelectedUsuarioIds(Long perfilId) {

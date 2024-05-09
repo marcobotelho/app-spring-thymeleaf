@@ -2,8 +2,6 @@ package com.projeto.appspringthymeleaf.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
@@ -28,7 +26,6 @@ public class MunicipioModel {
 	private EstadoModel estado;
 
 	@OneToMany(mappedBy = "municipio")
-	@JsonIgnore
 	private List<ClienteModel> clientes;
 
 	public MunicipioModel() {

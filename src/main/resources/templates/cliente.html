@@ -75,7 +75,7 @@
 	            	<div class="form-floating mb-3">
 						<select class="form-select" id="municipio" aria-label="Floating label select example" th:field="*{municipio.id}">
 							<option value=""></option>
-							<option th:each="municipio : *{municipio.estado.municipios}" th:value="${municipio.id}" th:text="${municipio.nome}"></option> 
+							<option th:each="municipio : ${municipios}" th:value="${municipio.id}" th:text="${municipio.nome}"></option> 
 						</select>
 						<label for="municipio">Municipio</label>
 	            	</div>
@@ -128,15 +128,29 @@
 
 	<script th:inline="javascript">
 		$(document).ready(function() {
+
+			// carregarMunicipios();
+			
 			$('#estado').change(function() {
-				var estadoId = $(this).val();
-				if (estadoId) {
-					getMunicipios(estadoId);
-				} else {
-					$('#municipio').html('<option value=""></option>');
-				}
+				carregarMunicipios();
 			});
+
+			$('#cep').blur(function() {
+				var cep = $(this).val();
+				if (cep) {
+					getViaCep(cep);
+				}
+			})
 		});
+
+		function carregarMunicipios() {
+			var estadoId = $('#estado').val();
+			if (estadoId) {
+				getMunicipios(estadoId);
+			} else {
+				$('#municipio').html('<option value=""></option>');
+			}
+		}
 	
 		function getMunicipios(estadoId) {
 			var contextRoot = /*[[@{/}]]*/ '';
@@ -154,6 +168,24 @@
 				},
 				error: function(xhr, status, error) {
 					var errorMessage = (xhr.responseJSON && xhr.responseJSON.message) || 'Erro ao carregar municípios';
+					console.error(errorMessage);
+					alert(errorMessage);
+				}
+			});
+		}
+
+		function getViaCep(cep) {
+			var contextRoot = /*[[@{/}]]*/ '';
+			//alert(contextRoot);
+			
+			$.ajax({
+				url: `https://viacep.com.br/ws/${cep}/json/`,
+				type: 'GET',
+				success: function(data) {
+					console.log(data);
+				},
+				error: function(xhr, status, error) {
+					var errorMessage = (xhr.responseJSON && xhr.responseJSON.message) || 'Erro ao buscar cep';
 					console.error(errorMessage);
 					alert(errorMessage);
 				}

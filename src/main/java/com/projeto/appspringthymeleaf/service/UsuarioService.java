@@ -8,6 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.projeto.appspringthymeleaf.dto.UsuarioDTO;
+import com.projeto.appspringthymeleaf.mapper.UsuarioMapper;
 import com.projeto.appspringthymeleaf.model.PerfilModel;
 import com.projeto.appspringthymeleaf.model.UsuarioModel;
 import com.projeto.appspringthymeleaf.repository.PerfilRepository;
@@ -43,41 +45,47 @@ public class UsuarioService {
 	@Autowired
 	private HttpServletRequest request;
 
-	public void save(UsuarioModel model) throws MessagingException {
+	public void save(UsuarioDTO dto) throws MessagingException {
+		UsuarioModel model = UsuarioMapper.converterParaModel(dto);
 		model.setSenha(passwordEncoder.encode(passwordGeneratorService.generateRandomPassword()));
 		usuarioRepository.save(model);
 		senhaRecuperar(model.getEmail());
 	}
 
-	public void delete(UsuarioModel model) {
+	public void delete(UsuarioDTO dto) {
+		UsuarioModel model = UsuarioMapper.converterParaModel(dto);
 		usuarioRepository.delete(model);
 	}
 
-	public void update(Long id, UsuarioModel model) {
-		UsuarioModel user = usuarioRepository.getReferenceById(id);
-		user.setNome(model.getNome());
-		user.setEmail(model.getEmail());
-		usuarioRepository.save(user);
+	public void update(Long id, UsuarioDTO dto) {
+		UsuarioModel model = usuarioRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Usuário com id " + id + " não encontrado!"));
+		model.setNome(dto.getNome());
+		model.setEmail(dto.getEmail());
+		usuarioRepository.save(model);
 	}
 
 	public void deleteById(Long id) {
-		getById(id);
+		if (usuarioRepository.existsById(id)) {
+			throw new RuntimeException("Usuário com id " + id + " não encontrado!");
+		}
 		usuarioRepository.deleteById(id);
 	}
 
-	public UsuarioModel getById(Long id) {
-		usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
-		return usuarioRepository.findById(id).get();
+	public UsuarioDTO getById(Long id) {
+		UsuarioModel model = usuarioRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Usuário com id " + id + " não encontrado!"));
+		return UsuarioMapper.converterParaDTO(model);
 	}
 
-	public List<UsuarioModel> getAll() {
-		return usuarioRepository.findAll();
+	public List<UsuarioDTO> getAll() {
+		return UsuarioMapper.converterParaDTOList(usuarioRepository.findAll());
 	}
 
 	public Long[] getSelectedPerfilIds(Long usuarioId) {
-		UsuarioModel usuario = usuarioRepository.findById(usuarioId)
-				.orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
-		List<PerfilModel> perfis = usuario.getPerfis();
+		UsuarioModel model = usuarioRepository.findById(usuarioId)
+				.orElseThrow(() -> new RuntimeException("Usuário com id " + usuarioId + " não encontrado!"));
+		List<PerfilModel> perfis = model.getPerfis();
 		Long[] ids = new Long[perfis.size()];
 		for (int i = 0; i < perfis.size(); i++) {
 			ids[i] = perfis.get(i).getId();

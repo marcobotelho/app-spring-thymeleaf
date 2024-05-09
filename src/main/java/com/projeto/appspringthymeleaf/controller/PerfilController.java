@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.projeto.appspringthymeleaf.model.PerfilModel;
+import com.projeto.appspringthymeleaf.dto.PerfilDTO;
 import com.projeto.appspringthymeleaf.record.AlertRecord;
 import com.projeto.appspringthymeleaf.service.PerfilService;
 import com.projeto.appspringthymeleaf.service.UsuarioService;
@@ -30,7 +30,7 @@ public class PerfilController {
 	private UsuarioService usuarioService;
 
 	@GetMapping("")
-	public String ini(@ModelAttribute("perfil") PerfilModel perfil,
+	public String ini(@ModelAttribute("perfil") PerfilDTO perfil,
 			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model) {
 		model.addAttribute("perfil", perfil);
 		model.addAttribute("perfis", perfilService.getAll());
@@ -39,7 +39,7 @@ public class PerfilController {
 	}
 
 	@PostMapping("")
-	public String salvar(@Valid PerfilModel perfil, BindingResult bindingResult,
+	public String salvar(@Valid PerfilDTO perfil, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes, Model model) {
 		if (bindingResult.hasErrors()) {
 			redirectAttributes.addFlashAttribute("perfil", perfil);

@@ -44,9 +44,9 @@ public class DataInitializer implements InitializingBean {
         @Override
         public void afterPropertiesSet() throws Exception {
                 /* Criando os perfis */
-                PerfilModel perfilAdmin = new PerfilModel("ROLE_ADMIN", "Administrador");
+                PerfilModel perfilAdmin = new PerfilModel(null, "ROLE_ADMIN", "Administrador");
                 perfilAdmin = perfilRepository.save(perfilAdmin);
-                PerfilModel perfilUser = new PerfilModel("ROLE_USER", "Usuário");
+                PerfilModel perfilUser = new PerfilModel(null, "ROLE_USER", "Usuário");
                 perfilUser = perfilRepository.save(perfilUser);
 
                 /* Criando os usuários */

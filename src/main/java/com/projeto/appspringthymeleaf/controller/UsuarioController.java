@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.projeto.appspringthymeleaf.model.UsuarioModel;
+import com.projeto.appspringthymeleaf.dto.UsuarioDTO;
 import com.projeto.appspringthymeleaf.record.AlertRecord;
 import com.projeto.appspringthymeleaf.service.PerfilService;
 import com.projeto.appspringthymeleaf.service.UsuarioService;
@@ -28,7 +28,7 @@ public class UsuarioController {
 	private PerfilService perfilService;
 
 	@GetMapping("")
-	public String ini(@ModelAttribute("usuario") UsuarioModel usuario,
+	public String ini(@ModelAttribute("usuario") UsuarioDTO usuario,
 			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model) {
 		model.addAttribute("usuario", usuario);
 		model.addAttribute("usuarios", usuarioService.getAll());
@@ -47,7 +47,7 @@ public class UsuarioController {
 	}
 
 	@PostMapping("")
-	public String salvar(UsuarioModel usuario, BindingResult bindingResult,
+	public String salvar(UsuarioDTO usuario, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			redirectAttributes.addFlashAttribute("alertRecord", criarAlertaErroValidacao(bindingResult));
@@ -60,7 +60,7 @@ public class UsuarioController {
 					usuarioService.update(usuario.getId(), usuario);
 				}
 				redirectAttributes.addFlashAttribute("alertRecord", criarAlertaSucesso("Usuário salvo com sucesso!"));
-				redirectAttributes.addFlashAttribute("usuario", new UsuarioModel());
+				redirectAttributes.addFlashAttribute("usuario", new UsuarioDTO());
 			} catch (Exception e) {
 				redirectAttributes.addFlashAttribute("alertRecord",
 						criarAlertaErro("Erro ao salvar usuário: " + e.getMessage()));

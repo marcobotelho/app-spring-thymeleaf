@@ -1,6 +1,5 @@
 package com.projeto.appspringthymeleaf.model;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import org.hibernate.validator.constraints.Length;
@@ -22,9 +21,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "telefone")
-public class TelefoneModel implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class TelefoneModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

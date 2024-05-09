@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.projeto.appspringthymeleaf.dto.TelefoneDTO;
 import com.projeto.appspringthymeleaf.enums.TipoTelefoneEnum;
-import com.projeto.appspringthymeleaf.model.TelefoneModel;
 import com.projeto.appspringthymeleaf.record.AlertRecord;
 import com.projeto.appspringthymeleaf.service.ClienteService;
 import com.projeto.appspringthymeleaf.service.TelefoneService;
@@ -30,7 +30,7 @@ public class TelefoneController {
 	private ClienteService clienteService;
 
 	@GetMapping("")
-	public String ini(@ModelAttribute("clienteId") Long clienteId, @ModelAttribute("telefone") TelefoneModel telefone,
+	public String ini(@ModelAttribute("clienteId") Long clienteId, @ModelAttribute("telefone") TelefoneDTO telefone,
 			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model) {
 		telefone.setCliente(clienteService.getById(clienteId));
 		model.addAttribute("telefone", telefone);
@@ -47,7 +47,7 @@ public class TelefoneController {
 	}
 
 	@PostMapping("")
-	public String salvar(@Valid TelefoneModel telefone, BindingResult bindingResult,
+	public String salvar(@Valid TelefoneDTO telefone, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes, Model model) {
 		if (bindingResult.hasErrors()) {
 			redirectAttributes.addFlashAttribute("telefone", telefone);

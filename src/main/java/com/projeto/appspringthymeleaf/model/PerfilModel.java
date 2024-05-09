@@ -34,7 +34,8 @@ public class PerfilModel {
     public PerfilModel() {
     }
 
-    public PerfilModel(String nome, String descricao) {
+    public PerfilModel(Long id, String nome, String descricao) {
+        this.id = id;
         this.nome = nome;
         this.descricao = descricao;
     }

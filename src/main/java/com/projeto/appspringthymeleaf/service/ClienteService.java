@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.projeto.appspringthymeleaf.dto.ClienteDTO;
+import com.projeto.appspringthymeleaf.mapper.ClienteMapper;
+import com.projeto.appspringthymeleaf.mapper.MunicipioMapper;
 import com.projeto.appspringthymeleaf.model.ClienteModel;
 import com.projeto.appspringthymeleaf.repository.ClienteRepository;
 
@@ -17,29 +20,33 @@ public class ClienteService {
 	@Autowired
 	private ClienteRepository clienteRepository;
 
-	public void save(ClienteModel model) {
-		clienteRepository.save(model);
-	}
-
-	public void delete(ClienteModel model) {
-		clienteRepository.delete(model);
-	}
-
-	public void update(Long id, ClienteModel model) {
-		ClienteModel cliente = clienteRepository.getReferenceById(id);
-		cliente.setNome(model.getNome());
-		cliente.setEmail(model.getEmail());
-		cliente.setIdade(model.getIdade());
-		cliente.setDataNascimento(model.getDataNascimento());
-		cliente.setCep(model.getCep());
-		cliente.setEndereco(model.getEndereco());
-		cliente.setBairro(model.getBairro());
-		if (model.getMunicipio() != null && model.getMunicipio().getId() != null) {
-			cliente.setMunicipio(model.getMunicipio());
-		} else {
-			cliente.setMunicipio(null);
+	public void save(ClienteDTO dto) {
+		if (dto.getId() != null && !clienteRepository.existsById(dto.getId())) {
+			throw new RuntimeException("Cliente com id " + dto.getId() + " não encontrado!");
 		}
-		clienteRepository.save(cliente);
+		clienteRepository.save(ClienteMapper.converterParaModel(dto));
+	}
+
+	public void delete(ClienteDTO dto) {
+		clienteRepository.delete(ClienteMapper.converterParaModel(dto));
+	}
+
+	public void update(Long id, ClienteDTO dto) {
+		ClienteModel model = clienteRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Cliente com id " + id + " não encontrado!"));
+		model.setNome(dto.getNome());
+		model.setEmail(dto.getEmail());
+		model.setIdade(dto.getIdade());
+		model.setDataNascimento(dto.getDataNascimento());
+		model.setCep(dto.getCep());
+		model.setEndereco(dto.getEndereco());
+		model.setBairro(dto.getBairro());
+		if (dto.getMunicipio() != null && dto.getMunicipio().getId() != null) {
+			model.setMunicipio(MunicipioMapper.converterParaModel(dto.getMunicipio()));
+		} else {
+			model.setMunicipio(null);
+		}
+		clienteRepository.save(model);
 	}
 
 	public void deleteById(Long id) {
@@ -47,12 +54,14 @@ public class ClienteService {
 		clienteRepository.deleteById(id);
 	}
 
-	public ClienteModel getById(Long id) {
-		clienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente não encontrado!"));
-		return clienteRepository.findById(id).get();
+	public ClienteDTO getById(Long id) {
+		ClienteModel model = clienteRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Cliente não encontrado!"));
+		return ClienteMapper.converterParaDTO(model);
 	}
 
-	public List<ClienteModel> getAll() {
-		return clienteRepository.findAll();
+	public List<ClienteDTO> getAll() {
+		List<ClienteModel> models = clienteRepository.findAll();
+		return ClienteMapper.converterParaDTOList(models);
 	}
 }

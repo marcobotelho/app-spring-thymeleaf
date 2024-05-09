@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.projeto.appspringthymeleaf.model.MunicipioModel;
+import com.projeto.appspringthymeleaf.dto.MunicipioDTO;
 import com.projeto.appspringthymeleaf.service.MunicipioService;
 
 @Controller
@@ -21,8 +21,8 @@ public class MunicipioController {
 
     @GetMapping("/{estadoId}")
     @ResponseBody
-    public List<MunicipioModel> getMunicipiosByEstado(@PathVariable("estadoId") Long estadoId) {
-        List<MunicipioModel> municipios = municipioService.getMunicipiosByEstadoId(estadoId);
+    public List<MunicipioDTO> getMunicipiosByEstado(@PathVariable("estadoId") Long estadoId) {
+        List<MunicipioDTO> municipios = municipioService.getMunicipiosByEstadoId(estadoId);
         return municipios;
         // return municipioService.getMunicipiosByEstadoId(estadoId);
     }
