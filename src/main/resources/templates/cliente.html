@@ -129,7 +129,7 @@
 	<script th:inline="javascript">
 		$(document).ready(function() {
 
-			// carregarMunicipios();
+			$('#cep').mask('00000-000');
 			
 			$('#estado').change(function() {
 				carregarMunicipios();
@@ -151,13 +151,15 @@
 				$('#municipio').html('<option value=""></option>');
 			}
 		}
-	
-		function getMunicipios(estadoId) {
+
+		function getContextRoot() {
 			var contextRoot = /*[[@{/}]]*/ '';
-			//alert(contextRoot);
-			
+			return contextRoot;
+		}
+	
+		function getMunicipios(estadoId) {			
 			$.ajax({
-				url: contextRoot + 'municipio/' + estadoId,
+				url: getContextRoot() + 'municipio/' + estadoId,
 				type: 'GET',
 				success: function(data) {
 					var options = '<option value=""></option>';
@@ -175,14 +177,25 @@
 		}
 
 		function getViaCep(cep) {
-			var contextRoot = /*[[@{/}]]*/ '';
-			//alert(contextRoot);
-			
 			$.ajax({
-				url: `https://viacep.com.br/ws/${cep}/json/`,
-				type: 'GET',
+				url: getContextRoot() + 'cliente/viacep',
+				type: 'POST',
+				data: cep,
 				success: function(data) {
 					console.log(data);
+					if (data) {
+						var options = '<option value=""></option>';
+						data.municipiosEstado.forEach(function(municipio) {
+							options += `<option value="${municipio.id}">${municipio.nome}</option>`;
+						});
+						$('#municipio').html(options);
+	
+						$('#cep').val(data.cep);
+						$('#endereco').val(data.logradouro);
+						$('#bairro').val(data.bairro);
+						$('#estado').val(data.municipioCep.estado.id);
+						$('#municipio').val(data.municipioCep.id);
+					}
 				},
 				error: function(xhr, status, error) {
 					var errorMessage = (xhr.responseJSON && xhr.responseJSON.message) || 'Erro ao buscar cep';

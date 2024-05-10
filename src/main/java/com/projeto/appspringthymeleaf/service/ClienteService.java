@@ -1,15 +1,19 @@
 package com.projeto.appspringthymeleaf.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.projeto.appspringthymeleaf.dto.ClienteDTO;
+import com.projeto.appspringthymeleaf.dto.ViaCepDTO;
 import com.projeto.appspringthymeleaf.mapper.ClienteMapper;
 import com.projeto.appspringthymeleaf.mapper.MunicipioMapper;
 import com.projeto.appspringthymeleaf.model.ClienteModel;
+import com.projeto.appspringthymeleaf.model.MunicipioModel;
 import com.projeto.appspringthymeleaf.repository.ClienteRepository;
+import com.projeto.appspringthymeleaf.repository.MunicipioRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -19,6 +23,9 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+
+	@Autowired
+	private MunicipioRepository municipioRepository;
 
 	public void save(ClienteDTO dto) {
 		if (dto.getId() != null && !clienteRepository.existsById(dto.getId())) {
@@ -63,5 +70,21 @@ public class ClienteService {
 	public List<ClienteDTO> getAll() {
 		List<ClienteModel> models = clienteRepository.findAll();
 		return ClienteMapper.converterParaDTOList(models);
+	}
+
+	public ViaCepDTO getViaCepMunicipios(String cep) {
+		ViaCepDTO viaCepDTO = ViaCepService.buscaCep(cep);
+		if (viaCepDTO.getUf() != null) {
+			List<MunicipioModel> municipios = municipioRepository.findByEstadoSigla(viaCepDTO.getUf());
+			viaCepDTO.setMunicipiosEstado(MunicipioMapper.converterParaDTOList(municipios));
+			if (viaCepDTO.getLocalidade() != null) {
+				Optional<MunicipioModel> municipio = municipioRepository
+						.findByNomeAndEstadoSiglaIgnoreCase(viaCepDTO.getLocalidade(), viaCepDTO.getUf());
+				if (municipio.isPresent()) {
+					viaCepDTO.setMunicipioCep(MunicipioMapper.converterParaDTO(municipio.get()));
+				}
+			}
+		}
+		return viaCepDTO;
 	}
 }

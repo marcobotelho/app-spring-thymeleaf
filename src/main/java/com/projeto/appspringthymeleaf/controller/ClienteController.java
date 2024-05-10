@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.projeto.appspringthymeleaf.dto.ClienteDTO;
 import com.projeto.appspringthymeleaf.dto.MunicipioDTO;
+import com.projeto.appspringthymeleaf.dto.ViaCepDTO;
 import com.projeto.appspringthymeleaf.record.AlertRecord;
 import com.projeto.appspringthymeleaf.service.ClienteService;
 import com.projeto.appspringthymeleaf.service.EstadoService;
@@ -96,6 +99,17 @@ public class ClienteController {
 					criarAlertaErro("Erro ao excluir usuário: " + e.getMessage()));
 		}
 		return "redirect:/cliente";
+	}
+
+	@PostMapping("/viacep")
+	@ResponseBody
+	public ViaCepDTO viaCep(@RequestBody String cep, Model model) {
+		try {
+			ViaCepDTO viaCepDTO = clienteService.getViaCepMunicipios(cep);
+			return viaCepDTO;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	@GetMapping("/viewTelefone/{id}")
