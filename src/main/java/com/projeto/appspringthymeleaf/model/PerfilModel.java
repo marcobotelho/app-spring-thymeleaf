@@ -11,10 +11,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "perfil")
+@Table(name = "perfil", uniqueConstraints = { @UniqueConstraint(name = "uk_perfil_nome", columnNames = { "nome" }) })
 public class PerfilModel {
 
     @Id
