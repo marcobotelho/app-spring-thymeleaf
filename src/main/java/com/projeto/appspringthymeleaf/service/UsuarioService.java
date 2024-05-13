@@ -14,7 +14,6 @@ import com.projeto.appspringthymeleaf.model.PerfilModel;
 import com.projeto.appspringthymeleaf.model.UsuarioModel;
 import com.projeto.appspringthymeleaf.repository.PerfilRepository;
 import com.projeto.appspringthymeleaf.repository.UsuarioRepository;
-import com.projeto.appspringthymeleaf.util.PasswordGeneratorService;
 
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;

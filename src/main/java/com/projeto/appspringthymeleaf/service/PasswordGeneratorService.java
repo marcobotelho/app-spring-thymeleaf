@@ -1,4 +1,4 @@
-package com.projeto.appspringthymeleaf.util;
+package com.projeto.appspringthymeleaf.service;
 
 import java.util.Random;
 
