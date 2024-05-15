@@ -2,18 +2,29 @@ package com.projeto.appspringthymeleaf.dto;
 
 import java.time.LocalDate;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(value = { "telefones.cliente" })
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class ClienteDTO {
     private Long id;
 
+    @NotBlank(message = "Nome obrigatório")
+    @Length(min = 3, max = 100, message = "Nome inválido")
     private String nome;
 
+    @NotBlank(message = "Email obrigatório")
+    @Email(message = "Email inválido")
     private String email;
 
+    @NotNull(message = "Idade obrigatória")
+    @Range(min = 1, max = 150, message = "Idade inválida")
     private Integer idade;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

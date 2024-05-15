@@ -17,6 +17,9 @@ import com.projeto.appspringthymeleaf.record.AlertRecord;
 import com.projeto.appspringthymeleaf.service.PerfilService;
 import com.projeto.appspringthymeleaf.service.UsuarioService;
 
+import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
+
 @Controller
 @RequestMapping("/usuario")
 public class UsuarioController {
@@ -47,79 +50,38 @@ public class UsuarioController {
 	}
 
 	@PostMapping("")
-	public String salvar(UsuarioDTO usuario, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors()) {
-			redirectAttributes.addFlashAttribute("alertRecord", criarAlertaErroValidacao(bindingResult));
-			redirectAttributes.addFlashAttribute("usuario", usuario);
+	public String salvar(@Valid UsuarioDTO usuario, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) throws MessagingException {
+		if (usuario.getId() == null) {
+			usuarioService.save(usuario);
 		} else {
-			try {
-				if (usuario.getId() == null) {
-					usuarioService.save(usuario);
-				} else {
-					usuarioService.update(usuario.getId(), usuario);
-				}
-				redirectAttributes.addFlashAttribute("alertRecord", criarAlertaSucesso("Usuário salvo com sucesso!"));
-				redirectAttributes.addFlashAttribute("usuario", new UsuarioDTO());
-			} catch (Exception e) {
-				redirectAttributes.addFlashAttribute("alertRecord",
-						criarAlertaErro("Erro ao salvar usuário: " + e.getMessage()));
-				redirectAttributes.addFlashAttribute("usuario", usuario);
-			}
+			usuarioService.update(usuario.getId(), usuario);
 		}
+		redirectAttributes.addFlashAttribute("alertRecord",
+				new AlertRecord("success", "Sucesso!", "Usuário salvo com sucesso!"));
+		redirectAttributes.addFlashAttribute("usuario", new UsuarioDTO());
 		return "redirect:/usuario";
 	}
 
 	@GetMapping("/excluir/{id}")
 	public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-		try {
-			usuarioService.deleteById(id);
-			redirectAttributes.addFlashAttribute("alertRecord", criarAlertaSucesso("Usuário excluído com sucesso!"));
-		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("alertRecord",
-					criarAlertaErro("Erro ao excluir usuário: " + e.getMessage()));
-		}
+		usuarioService.deleteById(id);
+		redirectAttributes.addFlashAttribute("alertRecord",
+				new AlertRecord("success", "Sucesso!", "Usuário excluído com sucesso!"));
 		return "redirect:/usuario";
 	}
 
 	@GetMapping("/viewTelefone/{id}")
-	public String viewTelefone(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
+	public String viewTelefone(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		redirectAttributes.addFlashAttribute("usuarioId", id);
 		return "redirect:/telefone";
 	}
 
-	private AlertRecord criarAlertaSucesso(String mensagem) {
-		return new AlertRecord("success", "Sucesso!", mensagem);
-	}
-
-	private AlertRecord criarAlertaErro(String mensagem) {
-		return new AlertRecord("danger", "Erro!", mensagem);
-	}
-
-	private AlertRecord criarAlertaErroValidacao(BindingResult bindingResult) {
-		return new AlertRecord("warning", "Atenção!", montarMsgErroValidacao(bindingResult));
-	}
-
-	private String montarMsgErroValidacao(BindingResult bindingResult) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<ul>");
-		bindingResult.getAllErrors().forEach(error -> {
-			sb.append("<li>");
-			sb.append(error.getDefaultMessage());
-			sb.append("</li>");
-		});
-		sb.append("</ul>");
-		return sb.toString();
-	}
-
 	@GetMapping("/{id}/perfis")
-	public String usuarioPerfis(@PathVariable Long id,
-			RedirectAttributes redirectAttributes, Model model) {
-
+	public String usuarioPerfis(@PathVariable Long id, Model model) {
 		model.addAttribute("usuario", usuarioService.getById(id));
 		model.addAttribute("perfis", perfilService.getAll());
 		model.addAttribute("selectedPerfilIds", usuarioService.getSelectedPerfilIds(id));
-
 		return "usuario-perfis";
 	}
 
@@ -127,14 +89,9 @@ public class UsuarioController {
 	public String salvarUsuarioPerfis(@RequestParam(value = "usuarioId", required = true) Long usuarioId,
 			@RequestParam(value = "selectedPerfilIds", required = false) Long[] selectedPerfilIds,
 			RedirectAttributes redirectAttributes, Model model) {
-		try {
-			usuarioService.salvarUsuarioPerfis(usuarioId, selectedPerfilIds);
-			redirectAttributes.addFlashAttribute("alertRecord",
-					criarAlertaSucesso("Usuário Perfis salvo com sucesso!"));
-		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("alertRecord",
-					criarAlertaErro("Erro ao salvar Usuário Perfis: " + e.getMessage()));
-		}
+		usuarioService.salvarUsuarioPerfis(usuarioId, selectedPerfilIds);
+		redirectAttributes.addFlashAttribute("alertRecord",
+				new AlertRecord("success", "Sucesso!", "Usuário Perfis salvo com sucesso!"));
 		return "redirect:/usuario/" + usuarioId + "/perfis";
 	}
 

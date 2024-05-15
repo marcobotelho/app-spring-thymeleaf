@@ -22,7 +22,7 @@ public class PerfilModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name obrigatório")
+    @NotBlank(message = "Nome obrigatório")
     private String nome;
 
     @NotBlank(message = "Descrição obrigatória")

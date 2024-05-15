@@ -12,10 +12,6 @@ import com.projeto.appspringthymeleaf.record.AlertRecord;
 @RequestMapping("/erro")
 public class ErroController {
 
-    private AlertRecord criarAlertaWarning(String mensagem) {
-        return new AlertRecord("warning", "Atenção!", mensagem);
-    }
-
     @GetMapping("")
     public String getError(@ModelAttribute("alertRecord") AlertRecord alertRecord) {
         return "erro";
@@ -24,7 +20,7 @@ public class ErroController {
     @GetMapping("/403")
     public String getError403(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("alertRecord",
-                criarAlertaWarning("Acesso negado!"));
+                new AlertRecord("danger", "Erro!", "Acesso negado!"));
         return "redirect:/erro";
     }
 

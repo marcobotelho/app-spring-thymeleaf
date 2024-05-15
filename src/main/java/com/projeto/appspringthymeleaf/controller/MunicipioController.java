@@ -24,7 +24,6 @@ public class MunicipioController {
     public List<MunicipioDTO> getMunicipiosByEstado(@PathVariable("estadoId") Long estadoId) {
         List<MunicipioDTO> municipios = municipioService.getMunicipiosByEstadoId(estadoId);
         return municipios;
-        // return municipioService.getMunicipiosByEstadoId(estadoId);
     }
 
 }

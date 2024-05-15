@@ -1,11 +1,20 @@
 package com.projeto.appspringthymeleaf.dto;
 
+import org.hibernate.validator.constraints.Length;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class UsuarioDTO {
 
     private Long id;
 
+    @NotBlank(message = "Nome obrigatório")
+    @Length(min = 3, max = 100, message = "Nome inválido")
     private String nome;
 
+    @NotBlank(message = "Email obrigatório")
+    @Email(message = "Email inválido")
     private String email;
 
     public UsuarioDTO() {

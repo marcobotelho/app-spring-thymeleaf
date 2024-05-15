@@ -69,7 +69,6 @@ public class PublicController {
             @RequestParam(name = "senhaNova") String senhaNova,
             @RequestParam(name = "senhaNovaConfirmacao") String senhaNovaConfirmacao,
             Model model, RedirectAttributes redirectAttributes) {
-
         try {
             usuarioService.senhaAlterar(token, senhaNova, senhaNovaConfirmacao);
             redirectAttributes.addFlashAttribute("alertRecord",

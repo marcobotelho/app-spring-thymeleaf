@@ -1,11 +1,15 @@
 package com.projeto.appspringthymeleaf.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class PerfilDTO {
 
     private Long id;
 
+    @NotBlank(message = "Nome obrigatório")
     private String nome;
 
+    @NotBlank(message = "Descrição obrigatória")
     private String descricao;
 
     public PerfilDTO() {

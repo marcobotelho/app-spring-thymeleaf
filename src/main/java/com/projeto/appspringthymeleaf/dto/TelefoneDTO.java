@@ -1,13 +1,24 @@
 package com.projeto.appspringthymeleaf.dto;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projeto.appspringthymeleaf.enums.TipoTelefoneEnum;
+
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class TelefoneDTO {
     private Long id;
 
+    @NotBlank(message = "Número obrigatório")
+    @Length(min = 15, max = 15, message = "Número inválido")
     private String numero;
 
+    @NotNull(message = "Tipo obrigatório")
+    @Enumerated(EnumType.STRING)
     private TipoTelefoneEnum tipo;
 
     @JsonIgnoreProperties("telefones")

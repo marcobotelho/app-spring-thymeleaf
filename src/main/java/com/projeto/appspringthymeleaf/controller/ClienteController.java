@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,37 +66,23 @@ public class ClienteController {
 	}
 
 	@PostMapping("")
-	public String salvar(@Valid ClienteDTO cliente, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors()) {
-			redirectAttributes.addFlashAttribute("alertRecord", criarAlertaErroValidacao(bindingResult));
+	public String salvar(@Valid ClienteDTO cliente, RedirectAttributes redirectAttributes) {
+		if (cliente.getId() == null) {
+			clienteService.save(cliente);
 		} else {
-			try {
-				if (cliente.getId() == null) {
-					clienteService.save(cliente);
-				} else {
-					clienteService.update(cliente.getId(), cliente);
-				}
-				redirectAttributes.addFlashAttribute("alertRecord", criarAlertaSucesso("Usuário salvo com sucesso!"));
-				redirectAttributes.addFlashAttribute("cliente", new ClienteDTO());
-			} catch (Exception e) {
-				redirectAttributes.addFlashAttribute("alertRecord",
-						criarAlertaErro("Erro ao salvar usuário: " + e.getMessage()));
-				redirectAttributes.addFlashAttribute("cliente", cliente);
-			}
+			clienteService.update(cliente.getId(), cliente);
 		}
+		redirectAttributes.addFlashAttribute("alertRecord",
+				new AlertRecord("success", "Sucesso!", "Usuário salvo com sucesso!"));
+		redirectAttributes.addFlashAttribute("cliente", new ClienteDTO());
 		return "redirect:/cliente";
 	}
 
 	@GetMapping("/excluir/{id}")
 	public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-		try {
-			clienteService.deleteById(id);
-			redirectAttributes.addFlashAttribute("alertRecord", criarAlertaSucesso("Usuário excluído com sucesso!"));
-		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("alertRecord",
-					criarAlertaErro("Erro ao excluir usuário: " + e.getMessage()));
-		}
+		clienteService.deleteById(id);
+		redirectAttributes.addFlashAttribute("alertRecord",
+				new AlertRecord("success", "Sucesso!", "Usuário excluído com sucesso!"));
 		return "redirect:/cliente";
 	}
 
@@ -116,29 +101,5 @@ public class ClienteController {
 	public String viewTelefone(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
 		redirectAttributes.addFlashAttribute("clienteId", id);
 		return "redirect:/telefone";
-	}
-
-	private AlertRecord criarAlertaSucesso(String mensagem) {
-		return new AlertRecord("success", "Sucesso!", mensagem);
-	}
-
-	private AlertRecord criarAlertaErro(String mensagem) {
-		return new AlertRecord("danger", "Erro!", mensagem);
-	}
-
-	private AlertRecord criarAlertaErroValidacao(BindingResult bindingResult) {
-		return new AlertRecord("warning", "Atenção!", montarMsgErroValidacao(bindingResult));
-	}
-
-	private String montarMsgErroValidacao(BindingResult bindingResult) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<ul>");
-		bindingResult.getAllErrors().forEach(error -> {
-			sb.append("<li>");
-			sb.append(error.getDefaultMessage());
-			sb.append("</li>");
-		});
-		sb.append("</ul>");
-		return sb.toString();
 	}
 }
