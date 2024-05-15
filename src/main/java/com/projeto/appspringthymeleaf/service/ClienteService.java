@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.projeto.appspringthymeleaf.dto.ClienteDTO;
@@ -26,6 +29,9 @@ public class ClienteService {
 
 	@Autowired
 	private MunicipioRepository municipioRepository;
+
+	@Value("${page.size}")
+	private Integer pageSize;
 
 	public void save(ClienteDTO dto) {
 		if (dto.getId() != null && !clienteRepository.existsById(dto.getId())) {
@@ -86,5 +92,10 @@ public class ClienteService {
 			}
 		}
 		return viaCepDTO;
+	}
+
+	public Page<ClienteDTO> getListaPaginada(int page) {
+		Page<ClienteModel> listaPaginada = clienteRepository.findAll(PageRequest.of(page, pageSize));
+		return ClienteMapper.converterParaDTOPage(listaPaginada);
 	}
 }

@@ -2,6 +2,8 @@ package com.projeto.appspringthymeleaf.mapper;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.projeto.appspringthymeleaf.dto.TelefoneDTO;
 import com.projeto.appspringthymeleaf.model.TelefoneModel;
 
@@ -30,5 +32,9 @@ public class TelefoneMapper {
 
     public static List<TelefoneModel> converterParaModelList(List<TelefoneDTO> telefones) {
         return telefones.stream().map(TelefoneMapper::converterParaModel).toList();
+    }
+
+    public static Page<TelefoneDTO> converterParaDTOPage(Page<TelefoneModel> telefones) {
+        return telefones.map(TelefoneMapper::converterParaDTO);
     }
 }

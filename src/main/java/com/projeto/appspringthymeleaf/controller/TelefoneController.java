@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.projeto.appspringthymeleaf.dto.TelefoneDTO;
@@ -29,11 +30,13 @@ public class TelefoneController {
 	private ClienteService clienteService;
 
 	@GetMapping("")
-	public String ini(@ModelAttribute("clienteId") Long clienteId, @ModelAttribute("telefone") TelefoneDTO telefone,
+	public String ini(@RequestParam(name = "clienteId", required = true) Long clienteId,
+			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+			@ModelAttribute("telefone") TelefoneDTO telefone,
 			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model) {
 		telefone.setCliente(clienteService.getById(clienteId));
 		model.addAttribute("telefone", telefone);
-		model.addAttribute("telefones", telefoneService.getAll(clienteId));
+		model.addAttribute("listaPaginada", telefoneService.getListaPaginada(clienteId, page));
 		model.addAttribute("tipos", TipoTelefoneEnum.values());
 
 		return "telefone";

@@ -2,6 +2,8 @@ package com.projeto.appspringthymeleaf.mapper;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.projeto.appspringthymeleaf.dto.ClienteDTO;
 import com.projeto.appspringthymeleaf.model.ClienteModel;
 
@@ -16,7 +18,11 @@ public class ClienteMapper {
         dto.setCep(cliente.getCep());
         dto.setEndereco(cliente.getEndereco());
         dto.setBairro(cliente.getBairro());
-        dto.setMunicipio(MunicipioMapper.converterParaDTO(cliente.getMunicipio()));
+        if (cliente.getMunicipio() != null && cliente.getMunicipio().getId() != null) {
+            dto.setMunicipio(MunicipioMapper.converterParaDTO(cliente.getMunicipio()));
+        } else {
+            dto.setMunicipio(null);
+        }
         return dto;
     }
 
@@ -30,7 +36,11 @@ public class ClienteMapper {
         model.setCep(dto.getCep());
         model.setEndereco(dto.getEndereco());
         model.setBairro(dto.getBairro());
-        model.setMunicipio(MunicipioMapper.converterParaModel(dto.getMunicipio()));
+        if (dto.getMunicipio() != null && dto.getMunicipio().getId() != null) {
+            model.setMunicipio(MunicipioMapper.converterParaModel(dto.getMunicipio()));
+        } else {
+            model.setMunicipio(null);
+        }
         return model;
     }
 
@@ -40,5 +50,9 @@ public class ClienteMapper {
 
     public static List<ClienteModel> converterParaModelList(List<ClienteDTO> clientes) {
         return clientes.stream().map(ClienteMapper::converterParaModel).toList();
+    }
+
+    public static Page<ClienteDTO> converterParaDTOPage(Page<ClienteModel> clientes) {
+        return clientes.map(ClienteMapper::converterParaDTO);
     }
 }

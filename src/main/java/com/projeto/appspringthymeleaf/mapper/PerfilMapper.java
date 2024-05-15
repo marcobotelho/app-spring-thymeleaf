@@ -2,6 +2,8 @@ package com.projeto.appspringthymeleaf.mapper;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.projeto.appspringthymeleaf.dto.PerfilDTO;
 import com.projeto.appspringthymeleaf.model.PerfilModel;
 
@@ -21,5 +23,9 @@ public class PerfilMapper {
 
     public static List<PerfilModel> converterParaModelList(List<PerfilDTO> perfisDTO) {
         return perfisDTO.stream().map(PerfilMapper::converterParaModel).toList();
+    }
+
+    public static Page<PerfilDTO> converterParaDTOPage(Page<PerfilModel> perfis) {
+        return perfis.map(PerfilMapper::converterParaDTO);
     }
 }

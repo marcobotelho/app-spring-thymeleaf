@@ -55,7 +55,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="usuario : ${usuarios}">
+                <tr th:each="usuario : ${listaPaginada}">
                     <td th:text="${usuario.id}"></td>
                     <td th:text="${usuario.nome}"></td>
                     <td th:text="${usuario.email}"></td>
@@ -67,7 +67,8 @@
                     </td>
                 </tr>
             </tbody>
-        </table>        
+        </table>    
+		<div th:replace="~{fragments/page-navigation :: pageNavigation(view='usuario', page=${listaPaginada})}"></div>     
    	  </div>
 	</div>
 	

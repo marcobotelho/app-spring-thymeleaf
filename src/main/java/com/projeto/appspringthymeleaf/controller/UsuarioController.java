@@ -32,9 +32,10 @@ public class UsuarioController {
 
 	@GetMapping("")
 	public String ini(@ModelAttribute("usuario") UsuarioDTO usuario,
-			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model) {
+			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model,
+			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
 		model.addAttribute("usuario", usuario);
-		model.addAttribute("usuarios", usuarioService.getAll());
+		model.addAttribute("listaPaginada", usuarioService.getListaPaginada(page));
 		return "usuario";
 	}
 

@@ -3,6 +3,9 @@ package com.projeto.appspringthymeleaf.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,6 +46,9 @@ public class UsuarioService {
 
 	@Autowired
 	private HttpServletRequest request;
+
+	@Value("${page.size}")
+	private Integer pageSize;
 
 	public void save(UsuarioDTO dto) throws MessagingException {
 		UsuarioModel model = UsuarioMapper.converterParaModel(dto);
@@ -159,5 +165,10 @@ public class UsuarioService {
 		usuario.setSenha(passwordEncoder.encode(senhaNova));
 		usuario.setToken(null);
 		usuarioRepository.save(usuario);
+	}
+
+	public Page<UsuarioDTO> getListaPaginada(int page) {
+		Page<UsuarioModel> listaPaginada = usuarioRepository.findAll(PageRequest.of(page, pageSize));
+		return UsuarioMapper.converterParaDTOPage(listaPaginada);
 	}
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -39,9 +40,10 @@ public class ClienteController {
 
 	@GetMapping("")
 	public String ini(@ModelAttribute("cliente") ClienteDTO cliente,
-			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model) {
+			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model,
+			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
 		model.addAttribute("cliente", cliente);
-		model.addAttribute("clientes", clienteService.getAll());
+		model.addAttribute("listaPaginada", clienteService.getListaPaginada(page));
 		model.addAttribute("estados", estadoService.getAll());
 
 		List<MunicipioDTO> municipios = null;

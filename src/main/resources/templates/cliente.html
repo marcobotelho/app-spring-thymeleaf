@@ -94,36 +94,37 @@
 	  <div class="card-header text-bg-primary">
 	    <b>Lista de Cliente</b>
 	  </div>
-	  <div class="card-body table-responsive">
-        <table class="table table-sm">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>Idade</th>
-                    <th>Nascimento</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="cliente : ${clientes}">
-                    <td th:text="${cliente.id}"></td>
-                    <td th:text="${cliente.nome}"></td>
-                    <td th:text="${cliente.email}"></td>
-                    <td th:text="${cliente.idade}"></td>
-                    <td th:text="${#temporals.format(cliente.dataNascimento, 'dd/MM/yyyy')}"></td>
-                    <td>
-                        <a th:href="@{/cliente/editar/{id}(id=${cliente.id})}" class="btn btn-primary btn-sm">Editar</a>
-                        <a th:href="@{/cliente/excluir/{id}(id=${cliente.id})}" class="btn btn-danger btn-sm" sec:authorize="hasAnyRole('ROLE_ADMIN')">Excluir</a>
-                        <a th:href="@{/cliente/viewTelefone/{clienteId}(clienteId=${cliente.id})}" class="btn btn-warning btn-sm">Telefones</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>        
+	  <div class="card-body table-responsive">        
+		<table class="table table-sm">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Nome</th>
+					<th>E-mail</th>
+					<th>Idade</th>
+					<th>Nascimento</th>
+					<th>Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item : ${listaPaginada.content}">
+					<td th:text="${item.id}"></td>
+					<td th:text="${item.nome}"></td>
+					<td th:text="${item.email}"></td>
+					<td th:text="${item.idade}"></td>
+					<td th:text="${#temporals.format(item.dataNascimento, 'dd/MM/yyyy')}"></td>
+					<td>
+						<a th:href="@{/cliente/editar/{id}(id=${item.id})}" class="btn btn-primary btn-sm">Editar</a>
+						<a th:href="@{/cliente/excluir/{id}(id=${item.id})}" class="btn btn-danger btn-sm" sec:authorize="hasAnyRole('ROLE_ADMIN')">Excluir</a>
+						<a th:href="@{/telefone?clienteId={clienteId}(clienteId=${item.id})}" class="btn btn-warning btn-sm">Telefones</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>       
+		<div th:replace="~{fragments/page-navigation :: pageNavigation(view='cliente', page=${listaPaginada})}"></div> 
    	  </div>
 	</div>
-
+			
     <div th:replace="~{fragments/footer :: footer}"></div>
 
 	<script th:inline="javascript">

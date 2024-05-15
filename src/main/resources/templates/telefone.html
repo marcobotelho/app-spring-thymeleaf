@@ -70,7 +70,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="telefone : ${telefones}">
+                <tr th:each="telefone : ${listaPaginada.content}">
                     <td th:text="${telefone.id}"></td>
                     <td th:text="${telefone.numero}"></td>
                     <td th:text="${telefone.tipo}"></td>
@@ -81,6 +81,7 @@
                 </tr>
             </tbody>
         </table>        
+		<div th:replace="~{fragments/page-navigation :: pageNavigation(view='telefone?clienteId=' + ${telefone.cliente.id}, page=${listaPaginada})}"></div>
    	  </div>
 	</div>
 	

@@ -30,9 +30,10 @@ public class PerfilController {
 
 	@GetMapping("")
 	public String ini(@ModelAttribute("perfil") PerfilDTO perfil,
-			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model) {
+			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model,
+			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
 		model.addAttribute("perfil", perfil);
-		model.addAttribute("perfis", perfilService.getAll());
+		model.addAttribute("listaPaginada", perfilService.getListaPaginada(page));
 
 		return "perfil";
 	}

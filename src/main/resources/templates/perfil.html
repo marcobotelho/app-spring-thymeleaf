@@ -56,7 +56,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="perfil : ${perfis}">
+                <tr th:each="perfil : ${listaPaginada}">
                     <td th:text="${perfil.id}"></td>
                     <td th:text="${perfil.nome}"></td>
                     <td th:text="${perfil.descricao}"></td>
@@ -68,6 +68,7 @@
                 </tr>
             </tbody>
         </table>        
+		<div th:replace="~{fragments/page-navigation :: pageNavigation(view='perfil', page=${listaPaginada})}"></div>     
    	  </div>
 	</div>
 	

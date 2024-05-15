@@ -1,0 +1,15 @@
+<th:block th:fragment="pageNavigation(view, page)">
+<nav aria-label="Page navigation" th:if="${page.totalPages >= 1}">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:class="${page.number <= 0} ? 'page-item disabled' : 'page-item'">
+            <a class="page-link" th:href="@{'/'+${view + (view.contains('?') ? '&' : '?')}+'page=' + ${page.number - 1}}">Anterior</a>
+        </li>
+        <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:class="${i == page.number} ? 'page-item active'">
+            <a class="page-link" th:href="@{'/'+${view + (view.contains('?') ? '&' : '?')}+'page=' + ${i}}">[[${i+1}]]</a>
+        </li>
+         <li class="page-item" th:class="${page.number < page.totalPages - 1} ? 'page-item' : 'page-item disabled'">
+            <a class="page-link" th:href="@{'/'+${view + (view.contains('?') ? '&' : '?')}+'page=' + ${page.number + 1}}">Próxima</a>
+        </li>
+    </ul>
+</nav>
+</th:block>

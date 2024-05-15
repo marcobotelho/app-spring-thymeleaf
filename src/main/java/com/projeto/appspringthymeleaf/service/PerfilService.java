@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.projeto.appspringthymeleaf.dto.PerfilDTO;
@@ -23,6 +26,9 @@ public class PerfilService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Value("${page.size}")
+    private Integer pageSize;
 
     public void save(PerfilDTO dto) {
         if (dto.getId() != null && !perfilRepository.existsById(dto.getId())) {
@@ -84,5 +90,10 @@ public class PerfilService {
         }
 
         usuarioRepository.saveAll(listaUsuarios);
+    }
+
+    public Page<PerfilDTO> getListaPaginada(int page) {
+        Page<PerfilModel> listaPaginada = perfilRepository.findAll(PageRequest.of(page, pageSize));
+        return PerfilMapper.converterParaDTOPage(listaPaginada);
     }
 }

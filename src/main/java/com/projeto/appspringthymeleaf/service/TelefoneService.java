@@ -3,6 +3,9 @@ package com.projeto.appspringthymeleaf.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.projeto.appspringthymeleaf.dto.TelefoneDTO;
@@ -18,6 +21,9 @@ public class TelefoneService {
 
 	@Autowired
 	private TelefoneRepository telefoneRepository;
+
+	@Value("${page.size}")
+	private Integer pageSize;
 
 	public void save(TelefoneDTO dto) {
 		if (dto.getId() != null && !telefoneRepository.existsById(dto.getId())) {
@@ -43,5 +49,11 @@ public class TelefoneService {
 
 	public List<TelefoneDTO> getAll(Long clienteId) {
 		return TelefoneMapper.converterParaDTOList(telefoneRepository.findByClienteId(clienteId));
+	}
+
+	public Page<TelefoneDTO> getListaPaginada(Long clienteId, int page) {
+		Page<TelefoneModel> listaPaginada = telefoneRepository.findByClienteIdPage(clienteId,
+				PageRequest.of(page, pageSize));
+		return TelefoneMapper.converterParaDTOPage(listaPaginada);
 	}
 }
