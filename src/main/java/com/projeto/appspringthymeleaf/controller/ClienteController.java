@@ -1,6 +1,8 @@
 package com.projeto.appspringthymeleaf.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,8 +24,12 @@ import com.projeto.appspringthymeleaf.record.AlertRecord;
 import com.projeto.appspringthymeleaf.service.ClienteService;
 import com.projeto.appspringthymeleaf.service.EstadoService;
 import com.projeto.appspringthymeleaf.service.MunicipioService;
+import com.projeto.appspringthymeleaf.service.RelatorioService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperPrint;
 
 @Controller
 @RequestMapping("/cliente")
@@ -38,12 +44,17 @@ public class ClienteController {
 	@Autowired
 	private MunicipioService municipioService;
 
+	@Autowired
+	private RelatorioService relatorioService;
+
 	@GetMapping("")
 	public String ini(@ModelAttribute("cliente") ClienteDTO cliente,
 			@ModelAttribute("alertRecord") AlertRecord alertRecord, Model model,
-			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page) {
+			@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+			@RequestParam(name = "btnBusca", required = false, defaultValue = "") String btnBusca,
+			@RequestParam(name = "nomeBusca", required = false, defaultValue = "") String nomeBusca,
+			HttpServletResponse response) {
 		model.addAttribute("cliente", cliente);
-		model.addAttribute("listaPaginada", clienteService.getListaPaginada(page));
 		model.addAttribute("estados", estadoService.getAll());
 
 		List<MunicipioDTO> municipios = null;
@@ -52,6 +63,12 @@ public class ClienteController {
 		}
 		model.addAttribute("municipios", municipios);
 
+		if (btnBusca.equals("busca")) {
+			model.addAttribute("nomeBusca", nomeBusca);
+			model.addAttribute("listaPaginada", clienteService.getListaPaginadaByNomeEmail(nomeBusca, 0));
+		} else {
+			model.addAttribute("listaPaginada", clienteService.getListaPaginada(page));
+		}
 		return "cliente";
 	}
 
@@ -103,5 +120,29 @@ public class ClienteController {
 	public String viewTelefone(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
 		redirectAttributes.addFlashAttribute("clienteId", id);
 		return "redirect:/telefone";
+	}
+
+	@GetMapping("/imprimir")
+	public void imprimir(@RequestParam(name = "btnBusca", required = false, defaultValue = "") String btnBusca,
+			@RequestParam(name = "nomeBusca", required = false, defaultValue = "") String nomeBusca,
+			HttpServletResponse response) {
+		try {
+			String nomeRelatorio = "RelClientes";
+			Map<String, Object> parametros = new HashMap<>();
+			parametros.put("P_BUSCA", nomeBusca);
+			// Chamar o serviço para gerar o relatório
+			JasperPrint jasperPrint = relatorioService.getJaperReport(nomeRelatorio, parametros);
+
+			// Renderizar o relatório em formato PDF (ou outro formato, conforme necessário)
+			response.setContentType("application/pdf");
+			// Configurar a resposta para download do relatório
+			response.setHeader("Content-Disposition", "attachment; filename=relatorio.pdf");
+			// Configurar a resposta para abrir o relatório no navegador
+			// response.setHeader("Content-Disposition", "inline; filename=relatorio.pdf");
+			JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao gerar o relatório: " + e.getMessage());
+		}
 	}
 }

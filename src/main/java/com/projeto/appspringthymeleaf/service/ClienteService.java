@@ -98,4 +98,10 @@ public class ClienteService {
 		Page<ClienteModel> listaPaginada = clienteRepository.findAll(PageRequest.of(page, pageSize));
 		return ClienteMapper.converterParaDTOPage(listaPaginada);
 	}
+
+	public Page<ClienteDTO> getListaPaginadaByNomeEmail(String busca, int page) {
+		Page<ClienteModel> listaPaginada = clienteRepository.findByNomeEmailQuery(busca,
+				PageRequest.of(page, pageSize));
+		return ClienteMapper.converterParaDTOPage(listaPaginada);
+	}
 }

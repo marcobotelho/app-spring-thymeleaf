@@ -94,7 +94,21 @@
 	  <div class="card-header text-bg-primary">
 	    <b>Lista de Cliente</b>
 	  </div>
-	  <div class="card-body table-responsive">        
+	  <div class="card-body table-responsive">     
+		<form id="formBusca" th:action="@{/cliente}" method="get">
+			<div class="input-group mb-4">
+				<input type="text" class="form-control" id="nomeBusca" name="nomeBusca" placeholder="Busca em: Nome, E-mail"  th:value="${nomeBusca}"/>
+				<button type="submit" name="btnBusca" class="btn btn-primary" value="busca" onclick="this.form.action='cliente';" title="Buscar">
+					<i class="bi bi-search"></i>
+				</button>
+				<button type="submit" name="btnBusca" class="btn btn-primary" value="limpar" onclick="this.form.action='cliente';" title="Limpar">
+					<i class="bi bi-x"></i>
+				</button>
+				<button type="submit" name="btnBusca" class="btn btn-primary" value="imprimir" onclick="this.form.action='cliente/imprimir';" title="Imprimir">
+					<i class="bi bi-printer"></i>
+				</button>
+			</div>
+		</form>
 		<table class="table table-sm">
 			<thead>
 				<tr>
